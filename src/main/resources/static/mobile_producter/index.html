@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>机智物联</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./css/mobile_globa.css">
+    <link rel="stylesheet" type="text/css" href="./css/mobile_producter.css" />
+    <link rel="stylesheet" type="text/css" href="./js/swiper/css/swiper.min.css" />
+    <script src="./js/rem.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./videojs/ezuikit.js"></script>
+
+    <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all">
+
+
+</head>
+
+<body>
+<div class="warp">
+    <div class="wl-banner">
+        <div class="swiper-container">
+            <div class="swiper-wrapper" id="banner"></div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+    <div class="wl-info">
+<!--        <div class="wl-title">湖南嘉穗农业</div>
+        <p class="details">嘉穗农业位于湖南衡阳县，是一个集水稻种植、生产、加工为一体的现代农业基地，主要产品包括有机大米...</p>-->
+        <ul class="list" id="infolist"></ul>
+    </div>
+    <div class="wl-video">
+        <div class="wl-title">实时视频</div>
+        <!-- class="swiper-container">
+                <div class="swiper-wrapper" id="realtime_video"></div>
+                <div class="swiper-pagination"></div>
+            </div> -->
+        <div class="showvideo">
+            <!-- <video id="player2" width=100% poster="" controls playsInline webkit-playsinline autoplay>
+                <source src="http://hls.open.ys7.com/openlive/a523364e367a4ba4856d23bb5edc1b44.hd.m3u8" audioplayer playsinline webkit-playsinline="true" x5-video-player-type="h5" type="application/x-mpegURL" />
+            </video> -->
+        </div>
+        <p class="explain">欢迎观看基地的实时视频，作物生长触手可及！</p>
+    </div>
+    <div class="wl-environmental">
+        <div class="wl-title">环境监测
+            <div class="abs-time">数据更新时间：<span id="gatherTime"></span></div>
+        </div>
+        <div class="environmental-box">
+            <div class="environmental-level">
+                <div class="title">作物生长环境评分</div>
+                <div class="level">优良</div>
+            </div>
+            <ul class="environmental-parameter" id="environmentallist"></ul>
+        </div>
+    </div>
+    <div class="wl-record">
+        <div class="wl-title">生产记录</div>
+        <div class="recodebox" id="productionInfo"></div>
+    </div>
+
+
+    <div class="wl-record" id="proInfo_DIV"  style="display: none;height: 475px">
+        <div class="wl-title">加工记录</div>
+        <div class="recodebox">
+            <ul class="recordtable">
+
+                <li style="opacity: 0.5;"></li>
+
+                <li style="opacity: 0.375;"></li>
+
+                <li style="opacity: 0.25;"></li>
+
+                <li style="opacity: 0.125;"></li>
+
+            </ul>
+            <ul class="recordlist" style="margin-top: -420px;">
+
+                <li class="left" style="top: 0px;">
+
+                    <div href="#" class="stepbox">
+                        <div class="step-process">萎凋</div>
+                        <div class="step-info">
+                            <div class="step-time">2019-04-05</div>
+                            <div class="step-name">李志</div>
+                        </div>
+                        <ul class="step-photo clearfix">
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/wt1.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/wt1.jpg) center center no-repeat;background-size: cover;"></li>
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/wt2.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/wt2.jpg) center center no-repeat;background-size: cover;"></li>
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/wt3.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/wt3.jpg) center center no-repeat;background-size: cover;"></li>
+                        </ul>
+                        <div class="step-explain">
+                            萎凋是制作白茶、红茶、乌龙茶的一个重要的工艺步骤。
+                        </div>
+                    </div>
+                </li>
+
+                <li class="right" style="top: 33.6px;">
+
+                    <div href="#" class="stepbox">
+                        <div class="step-process">揉捻</div>
+                        <div class="step-info">
+                            <div class="step-time">2019-04-6</div>
+                            <div class="step-name">马东</div>
+                        </div>
+                        <ul class="step-photo clearfix">
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/rl1.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/rl1.jpg) center center no-repeat;background-size: cover;"></li>
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/rl2.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/rl2.jpg) center center no-repeat;background-size: cover;"></li>
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/rl3.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/rl3.jpg) center center no-repeat;background-size: cover;"></li>
+                        </ul>
+                        <div class="step-explain">
+                            上下揉搓，成了线条
+                        </div>
+                    </div>
+                </li>
+
+                <li class="left" style="top: 67.2px;">
+
+                    <div href="#" class="stepbox">
+                        <div class="step-process">发酵</div>
+                        <div class="step-info">
+                            <div class="step-time">2019-04-07</div>
+                            <div class="step-name">赵武</div>
+                        </div>
+                        <ul class="step-photo clearfix">
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/fx1.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/fx1.jpg) center center no-repeat;background-size: cover;"></li>
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/fx2.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/fx2.jpg) center center no-repeat;background-size: cover;"></li>
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/fx3.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/fx3.jpg) center center no-repeat;background-size: cover;"></li>
+                        </ul>
+                        <div class="step-explain">
+                            发酵是制作红茶的一个关键工艺步骤，以奠定红茶香气的基调的过程。
+                        </div>
+                    </div>
+                </li>
+
+                <li class="right" style="top: 100.8px;">
+                    <div href="#" class="stepbox">
+                        <div class="step-process">干燥</div>
+                        <div class="step-info">
+                            <div class="step-time">2019-04-08</div>
+                            <div class="step-name">赵武</div>
+                        </div>
+                        <ul class="step-photo clearfix">
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/gz1.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/gz1.jpg) center center no-repeat;background-size: cover;"></li>
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/gz2.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/gz2.jpg) center center no-repeat;background-size: cover;"></li>
+                            <li class="open" data-img="http://www.topwulian.com/productpro/tpst/gz3.jpg" style="background: url(http://www.topwulian.com/productpro/tpst/gz3.jpg) center center no-repeat;background-size: cover;"></li>
+                        </ul>
+                        <div class="step-explain">
+                            干燥的方式有三类：炒干、烘干和晒干。
+                        </div>
+                    </div>
+                </li>
+
+
+            </ul>
+        </div>
+    </div>
+
+
+
+
+    <div class="wl_inspectionreport" id="inspection_DIV" style="display: none">
+        <div class="wl-title">检测报告</div>
+        <div class="layui-card-body">
+            <div class="layui-carousel" id="test1">
+                <div carousel-item class="inspectionreportlist">
+                    <div><img src="./img/jsz/001.jpg" alt=""/></div>
+                    <div><img src="./img/jsz/002.jpg" alt="" /></div>
+                    <div><img src="./img/jsz/003.jpg" alt="" /></div>
+                    <div><img src="./img/jsz/004.jpg" alt="" /></div>
+                    <div><img src="./img/jsz/005.jpg" alt="" /></div>
+                    <div><img src="./img/jsz/006.jpg" alt="" /></div>
+                    <div><img src="./img/jsz/007.jpg" alt="" /></div>
+                    <div><img src="./img/jsz/008.jpg" alt="" /></div>
+                    <div><img src="./img/jsz/009.jpg" alt="" /></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="wl_inspectionreport" id="inspection_DIV_tpst" style="display: none">
+        <div class="wl-title">检测报告</div>
+        <div class="layui-card-body">
+            <div class="layui-carousel" id="inspection_tpst_img">
+                <div carousel-item class="inspectionreportlist">
+                    <div><img src="./img/tpst/0001.jpg" alt=""/></div>
+                    <div><img src="./img/tpst/0002.jpg" alt=""/></div>
+                    <div><img src="./img/tpst/0003.jpg" alt=""/></div>
+                    <div><img src="./img/tpst/0004.jpg" alt=""/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tong" style="display: none;">
+        <img src="./img/tpst/tpstxcx.jpg"  style="width: 200px;height: auto">
+        <span>请长按图片扫码进入天鹏生态小程序进行购买</span>
+    </div>
+
+
+    <div class="wl_inspectionreport" id="qualifications_div_tpst" style="display: none">
+        <div class="wl-title">企业资质</div>
+        <div class="layui-card-body">
+            <div class="layui-carousel" id="test2">
+                <div carousel-item class="inspectionreportlist">
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/1.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/2.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/3.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/4.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/5.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/6.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/7.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/8.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/9.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/10.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/11.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/12.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/13.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/18.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/19.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/20.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/21.jpg" alt=""/></div>
+                    <div><img src="http://www.topwulian.com/qualifications/tpst/22.jpg" alt=""/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+<div class="wl-qualifications" id="qualifications_div">
+    <div class="wl-title">企业资质</div>
+    <ul class="qualificationslist">
+        <li><img src="./img/producter/qualifications/qualifications01.png" alt="" /></li>
+        <li><img src="./img/producter/qualifications/qualifications01.png" alt="" /></li>
+    </ul>
+</div>
+
+
+<div class="wl-footer">
+    <p>技术服务：<span>湖南机智物联科技有限公司</span></p>
+    <p>技术服务热线：0731-89912911</p>
+</div>
+</div>
+<div class="model"></div>
+</body>
+<script src="./js/jquery-2.1.1.min.js"></script>
+<script src="./js/template.js"></script>
+<script src="./js/swiper/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script id="banner_tmp" type="template/text">
+    {{if productBatches}}
+    <div class="swiper-slide"><img src="{{productBatches.img}}" alt=""></div>
+    {{/if}}
+</script>
+<script id="infolist_tmp" type="template/text">
+    {{if productBatches}}
+    <li>
+        <span class="li1">产品名称</span>
+        <span class="li2">{{productBatches.productName}}</span>
+    </li>
+    <li>
+        <span class="li1">产品批次</span>
+        <span class="li2">{{productBatches.productBatch}}</span>
+    </li>
+    <li>
+        <span class="li1">种植面积</span>
+        <span class="li2">{{productBatches.area}}</span>
+    </li>
+    <li>
+        <span class="li1">采收时间</span>
+        <span class="li2">{{productBatches.recoverydate}}</span>
+    </li>
+    <li>
+        <span class="li1">作物产地</span>
+        <span class="li2">{{farm.city}}</span>
+    </li>
+    <li>
+        <span class="li1">产品特色</span>
+        <span class="li2">{{productBatches.feature}}</span>
+    </li>
+    {{/if}}
+</script>
+<script id="video_tmp" type="template/text">
+    <video id="player2" width=100% poster="" controls playsInline webkit-playsinline autoplay>
+        <source src="{{url}}" audioplayer playsinline webkit-playsinline="true" x5-video-player-type="h5" type="application/x-mpegURL" />
+    </video>
+</script>
+<script id="environmentallist_tmp" type="template/text">
+    {{each deviceGathers}}
+    <li>
+        <p class="data">{{$value.basicData}}</p>
+        <p class="title">{{$value.deviceName}}</p>
+    </li>
+    {{/each}}
+</script>
+<script id="info_tmp" type="template/text">
+    <div class="wl-title">{{farm.name}}<div id="weixingzh" style="display: none;float: right;"></div></div>
+    <textarea class="smallArea"  name="txta" rows="3" style="width: 100%;border:solid 0px;color: #9c9c9c;line-height: .3rem;padding-bottom: .2rem;">{{farm.remark}}</textarea>
+    <div class="buy" id="deviceBuyShow" style="display: none">订购产品</div>
+    <div class="buy" id="deviceBuy"style="display: none" onclick="deviceBuyClick()">订购产品</div>
+
+    <ul class="list" id="infolist">
+        {{if productBatches}}
+        <li>
+            <span class="li1">产品名称</span>
+            <span class="li2">{{productBatches.productName}}</span>
+        </li>
+        <li>
+            <span class="li1">产品批次</span>
+            <span class="li2">{{productBatches.productBatch}}</span>
+        </li>
+        <li>
+            <span class="li1">种植面积</span>
+            <span class="li2">{{productBatches.area}}</span>
+        </li>
+        <li>
+            <span class="li1">采收时间</span>
+            <span class="li2">{{productBatches.recoverydate}}</span>
+        </li>
+        <li>
+            <span class="li1">产品产地</span>
+            <span class="li2">{{farm.city}}{{farm.district}}</span>
+        </li>
+        <li>
+            <span class="li1">产品特色</span>
+            <span class="li2">{{productBatches.feature}}</span>
+        </li>
+        {{/if}}
+    </ul>
+</script>
+<script id="recordlist_tmp" type="template/text">
+    <ul class="recordtable">
+        {{each opacitylist}}
+        <li style="opacity: {{$value}};"></li>
+        {{/each}}
+    </ul>
+    <ul class="recordlist">
+        {{each mydata.producterIdList as value index}} {{if index%2==1}}
+        <li class="right">
+            {{else}}
+        <li class="left">
+            {{/if}}
+            <div href="#" class="stepbox">
+                <div class="step-process">{{value.content}}</div>
+                <div class="step-info">
+                    <div class="step-time">{{value.createTime.substring(0,value.createTime.indexOf(" "))}}</div>
+                    <div class="step-name">{{value.userName}}</div>
+                </div>
+                <ul class="step-photo clearfix">
+                    <li class="open" data-img="{{value.img1}}" style="background: url({{value.img1}}) center center no-repeat;background-size: cover;"></li>
+                    <li class="open" data-img="{{value.img2}}" style="background: url({{value.img2}}) center center no-repeat;background-size: cover;"></li>
+                    <li class="open" data-img="{{value.img3}}" style="background: url({{value.img3}}) center center no-repeat;background-size: cover;"></li>
+                </ul>
+                <div class="step-explain">
+                    {{value.descContent}}
+                </div>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
+</script>
+<script id="qualificationslist_tmp" type="template/text">
+    {{each myqualifications}}
+    <li>
+        <img src="{{$value}}" alt="" />
+    </li>
+    {{/each}}
+</script>
+
+<script src="../layuiadmin/layui/layui.js"></script>
+
+<script>
+    let mydata = '';
+    $(document).ready(function() {
+        init();
+        clickopen()
+    })
+
+    layui.use(['carousel','layer'], function(){
+        var carousel = layui.carousel;
+        var layer = layui.layer;
+        //建造实例
+        carousel.render({
+            elem: '#test1'
+            ,width: '100%' //设置容器宽度
+            ,arrow: 'always' //始终显示箭头
+            ,height:'100%'
+            //,anim: 'updown' //切换动画方式
+        });
+
+        carousel.render({
+            elem: '#test2'
+            ,width: '100%' //设置容器宽度
+            ,arrow: 'always' //始终显示箭头
+            ,height:'90%'
+            //,anim: 'updown' //切换动画方式
+        });
+
+        carousel.render({
+            elem: '#inspection_tpst_img'
+            ,width: '100%' //设置容器宽度
+            ,arrow: 'always' //始终显示箭头
+            ,height:'90%'
+            //,anim: 'updown' //切换动画方式
+        });
+
+    });
+
+
+
+
+
+
+    function getDateInfo(date){
+        var dateStr = date.substring(0,date.indexOf(" "));
+        return dataStr;
+    }
+
+
+
+    function initvideo(id,fid) {
+        console.log(fid)
+        let v = '';
+        if (fid == '45') {
+            $("#inspection_DIV").show();
+        }
+
+
+        if(fid == '51'){
+            $("#inspection_DIV_tpst").show();
+            $("#qualifications_div_tpst").show();
+            $("#qualifications_div").hide();
+        }
+        if(id == '90'){
+            //$("#proInfo_DIV").show();
+        }
+
+
+        if (fid == '51' || fid == 51){
+            var html = '<a href="https://mp.weixin.qq.com/mp/getmasssendmsg?__biz=MzU0MDQ1NzYyMw==#wechat_webview_type=1&wechat_redirect" style="color: #EF6545">点击关注公众号</a>';
+            $("#weixingzh").html(html);
+            $("#weixingzh").show();
+            $("#deviceBuy").show();
+        }else{
+            $("#deviceBuyShow").show();
+        }
+
+        if(mydata.listVedio.length>0){
+            v = mydata.listVedio[0].url;
+
+            let h = template('video_tmp', {
+                url: v
+            })
+            // console.log(h)
+            $('.showvideo').html(h);
+            // setTimeout(function() {
+
+            // }, 0)
+            var player = new EZUIPlayer('player2');
+            player.play();
+        }else{
+            let h = template('video_tmp', {
+                url: v
+            })
+            // console.log(h)
+            $('.showvideo').html(h);
+        }
+
+
+
+
+    }
+
+    function clickopen() {
+        $('.recodebox').on('click', '.open', function() {
+            let img = $(this).data('img');
+            console.log(img)
+            $('.model').show().css({
+                "background": "url(" + img + ") center center no-repeat",
+                "backgroundSize": "cover"
+            })
+        })
+        $('.model').click(function() {
+            $(this).hide()
+        })
+    }
+
+    function init() {
+        let search = window.location.search;
+        let str = search;
+        str = str.substring(1, str.length);
+        console.log(str)
+        let arr = str.split("&");
+        let obj = new Object();
+        for (let i = 0; i < arr.length; i++) {
+            let tmp_arr = arr[i].split("=");
+            obj[decodeURIComponent(tmp_arr[0])] = decodeURIComponent(tmp_arr[1]);
+        }
+        let id = obj['id'];
+        let farmid = obj['farmid'];
+        // console.log(111)
+
+        $.ajax({
+            // headers:{
+            //        'Content-Type': "application/json; charset=utf-8"
+            //    },
+            url: 'http://x.topwulian.com/tTasks/mobile',
+            //				url:'http://192.168.2.145:9001/tTasks/mobile',
+            type: 'post',
+            data: {
+                id,
+                farmid
+            },
+            success(res) {
+                console.log(res)
+                console.log(res.data.farm.name);
+                document.title=res.data.farm.name+'产品追溯';
+                mydata = res.data
+            },
+            complete() {
+                getbanner()
+                getinfo()
+                // getvideo()
+                getenvironmental()
+                getrecord()
+                getqualifications()
+
+
+                initvideo(id,farmid)
+            }
+        })
+    }
+
+    function getbanner() {
+        var html = template('banner_tmp', mydata)
+        $('#banner').html(html)
+        initbanner()
+    }
+
+    function getinfo() {
+        var html = template('info_tmp', mydata)
+
+        $('.wl-info').html(html)
+    }
+
+    // function getvideo() {
+    //     var html = template('video_tmp', {})
+    //     $('#realtime_video').html(html)
+    //     initbanner()
+    // }
+
+    function getenvironmental() {
+
+        var gatherTime = "";
+        if(mydata.deviceGathers.length>0){
+            gatherTime = mydata.deviceGathers[0].gatherTime;
+        }
+        $("#gatherTime").html(gatherTime)
+        var html = template('environmentallist_tmp', mydata)
+        $('#environmentallist').html(html)
+    }
+
+    function getrecord() {
+        setTimeout(function() {
+            var list = mydata;
+            var arr = [];
+            var newarr = [];
+            total = arr.length = list.producterIdList.length;
+            arr = arr.fill(0)
+            newarr = arr.map(function(v, i) {
+                return (i + 1) / 8
+            })
+            var obj = {
+                "opacitylist": newarr.reverse(),
+                mydata: mydata
+            }
+            console.log(obj)
+            var html = template('recordlist_tmp', obj)
+            $('#productionInfo').html(html)
+            setTimeout(function() {
+                $('.recodebox .recordlist>li').each(function(i, v) {
+                    $(v).css('top', i * (2 + 0.1) + 'rem')
+                })
+            }, 100)
+        }, 100)
+    }
+
+    function getqualifications() {
+        $.ajax({
+            url: './myjson/myproducter.json',
+            success: function(res) {
+                var html = template('qualificationslist_tmp', res.myjson)
+                //					$('.qualificationslist').html(html)
+            }
+        })
+    }
+
+    function initbanner() {
+        var mySwiper = new Swiper('.swiper-container', {
+            autoplay: true, //可选选项，自动滑动
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                stopOnLastSlide: false,
+                disableOnInteraction: true,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+            },
+        });
+    }
+
+    function deviceBuyClick(){
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 0,
+            area: '200px',
+            skin: 'layui-layer-demo',  //没有背景色
+            shadeClose: true,
+            content: $('#tong')
+        });
+    }
+</script>
+<script>
+    // var player2 = new EZUIPlayer('player2');
+</script>
+
+</html>

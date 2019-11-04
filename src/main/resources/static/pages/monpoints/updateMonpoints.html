@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="../../js/city-picker/city-picker.css">
+    <script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>
+    <script src="../../js/city-picker/city-picker.data.js"></script>
+    <script src="../../js/city-picker/city-picker.js"></script>
+</head>
+<body>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <form class="form-horizontal" onsubmit="return false" id="form">
+        <fieldset>
+            <input type="hidden" id="id" name="id">
+            <div class='form-group'>
+                <label class='col-md-2 control-label'>监测点名称</label>
+                <div class='col-md-10'>
+                    <input class='form-control' placeholder='监测点名称' type='text' name='monpointsName' id='monpointsName'
+                           data-bv-notempty='true' data-bv-notempty-message='监测点名称不能为空'>
+                </div>
+            </div>
+
+            <div class='form-group'>
+                <label class='col-md-2 control-label'>监测点地址</label>
+                <div class='col-md-10'>
+                    <input class='form-control' placeholder='监测点地址' type='text' name='monpointsAddress' id='monpointsAddress'
+                           data-bv-notempty='true' data-bv-notempty-message='监测点地址不能为空'>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <div class="row" align="center">
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" onclick="javascript:history.back(-1)">返回</button>
+                        <button class="btn btn-primary" type="submit" onclick="update()">
+                            <i class="fa fa-save"></i> 保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+</div>
+<!--<script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>-->
+<script type="text/javascript" src="../../js/jq.js"></script>
+<script type="text/javascript" src="../../js/plugin/bootstrapvalidator/bootstrapValidator.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript">
+    //初始化city-picker省市区三级联动
+    $("#city-picker2").citypicker();
+    var createTime;
+    layui.use(['layer', 'laydate'], function () {
+        var layer = layui.layer;
+    });
+
+    initData();
+
+    function initData() {
+        var id = getUrlParam("id");
+        $("#city-picker2").citypicker("reset");
+        $("#city-picker2").citypicker("destroy");
+        if (id != "") {
+            $.ajax({
+                type: 'get',
+                url: '/monpoints/' + id,
+                async: false,
+                success: function (data) {
+
+
+                    $('#id').val(data.id);
+                    $('#monpointsName').val(data.monpointsName);
+                    $('#monpointsAddress').val(data.monpointsAddress);
+
+
+                }
+            });
+        }
+    }
+
+    function update() {
+        var formdata = $("#form").serializeObject();
+        $.ajax({
+            type: 'put',
+            url: '/monpoints',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(formdata),
+            success: function (data) {
+                layer.msg("修改成功", {shift: -1, time: 1000}, function () {
+                    location.href = "monpointsList.html";
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>

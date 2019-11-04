@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>视频监控</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/font/font_2wmcsfamra2/iconfont.css">
+    <link rel="stylesheet" href="../../../css/global-bug.css">
+    <link href="../../../css/mui.min.css" rel="stylesheet">
+    <script src="../../../js/mui.min.js"></script>
+
+</head>
+<body ng-app="ia" ng-controller="vedioController" ng-init="getVedioListByUserId();">
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <strong style="color: #0000FF">智能视频监控设备</strong>&nbsp;设备总数：{{vedioList.length}}台
+                    <a lay-href="" class="layui-a-tips">全部加载</a>
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space10" id="playInfoShow" style="width: 100%;max-height: 140%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script src="../../../js/angularjs/angular.min.js"></script>
+<script src="../../../js/jquery-2.1.1.min.js"></script>
+<script src="../../../videojs/ezuikit.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'sample']);
+
+    //accessToken的有效期只有七天,所以需要定时获取更新到数据库
+    data={
+        accessToken: 'at.1o9c0fjkcyz4r0r4avpdgofd5u2xkgx1-6ii4us9k6q-15p3qy7-mwigwig3h',
+        deviceSerial:'C19234800',
+        channelNo:1
+    }
+
+    var app=angular.module('ia',[]);//myFarmController
+    app.controller('vedioController',function ($scope,$http,$sce) {
+        $scope.getVedioListByUserId=function () {
+            $http.get('/vedios/vedioListByUserId/').then(function (response) {
+                $scope.vedioList=response.data;
+                data.accessToken=$scope.vedioList[0].accessToken;
+                data.deviceSerial=$scope.vedioList[0].deviceSerial;
+                //data.channelNo=$scope.vedioList[0].channelNo;
+                var urlTemp=$scope.vedioList[0].url;
+                $scope.url=urlTemp;
+                $scope.vedio=response.data[0];
+                $scope.vedio1=response.data[1];
+                var vedioLength  = $scope.vedioList.length;
+
+                var playInfoHTML = "";
+
+                for(var i=0;i<vedioLength;i++){
+                    var name = $scope.vedioList[i].name;
+                    console.info(name);
+                    var token = $scope.vedioList[i].accessToken;
+                    var deviceSerial = $scope.vedioList[i].deviceSerial;
+                    playInfoHTML += '<div class="layui-col-xs4 layui-col-sm4" style="float: left">';
+                    playInfoHTML += '<div class="layuiadmin-card-text">';
+                    playInfoHTML += '<div class="layui-text-top"><i class="layui-icon layui-icon-video"></i>'+name+'</div>';
+                    playInfoHTML += '<video  type="application/x-mpegURL" style="max-height: 300px;width:100% " id="player'+i+'" poster="" controls playsInline webkit-playsinline autoplay > <source  src="'+ $scope.vedioList[i].url + '"  audioplayer playsinline webkit-playsinline="true" x5-video-player-type="h5"  type="application/x-mpegURL"></video>';
+                    if(name.indexOf("球")>-1){
+                        playInfoHTML += '<div class="layui-text-bottom layui-row vedio-button-select" style="height: 45px;">';
+                        playInfoHTML += '<button lay-submit="" lay-filter="add" onclick="control(0,'+"'"+token+"'"+','+"'"+deviceSerial+"'"+')">上</button>';
+                        playInfoHTML += '<button lay-submit="" lay-filter="add" onclick="control(1,'+"'"+token+"'"+','+"'"+deviceSerial+"'"+')" >下</button>';
+                        playInfoHTML += '<button lay-submit="" lay-filter="add" onclick="control(2,'+"'"+token+"'"+','+"'"+deviceSerial+"'"+')">左</button>';
+                        playInfoHTML += '<button lay-submit="" lay-filter="add" onclick="control(3,'+"'"+token+"'"+','+"'"+deviceSerial+"'"+')">右</button>';
+                        playInfoHTML += '<button lay-submit="" lay-filter="add" onclick="stop()">停止</button>';
+                        playInfoHTML += '<button lay-submit="" lay-filter="add" onclick="control(8,'+"'"+token+"'"+','+"'"+deviceSerial+"'"+')")">放大</button>';
+                        playInfoHTML += '<button lay-submit="" lay-filter="add" onclick="control(9,'+"'"+token+"'"+','+"'"+deviceSerial+"'"+')" >缩小</button>';
+                        playInfoHTML += '<button lay-submit="" lay-filter="add" onclick="control(10,'+"'"+token+"'"+','+"'"+deviceSerial+"'"+')" >近焦</button>';
+                        playInfoHTML += '<button lay-submit="" lay-filter="add" onclick="control(11,'+"'"+token+"'"+','+"'"+deviceSerial+"'"+')" >远焦</button>';
+                        playInfoHTML += '<button lay-submit="" lay-filter="add" onclick="capture()">抓拍</button>';
+                        playInfoHTML += '<div style="float: left;">';
+                        /*playInfoHTML += '<select id="speed3" name="speed" lay-verify="required" class="vedio-select layui-btn layui-btn-normal layui-col-sm2 form-control input-sm" data-bv-notempty="true">';
+                        playInfoHTML += '<option value="0">慢速</option><option value="1">正常</option><option value="2">快速</option>';
+                        playInfoHTML += '</select>';*/
+                        playInfoHTML += '<select id="frame" name="frame" lay-verify="required" class="vedio-select layui-btn layui-btn-normal layui-col-sm2 form-control input-sm" data-bv-notempty="true">';
+                        playInfoHTML += '<option value="0">一倍率</option><option value="500">二倍率</option><option value="750">三倍率</option><option value="1000">四倍率</option><option value="1250">五倍率</option><option value="1500">六倍率</option><option value="1750">七倍率</option><option value="2000">八倍率</option><option value="2200">九倍率</option><option value="2500">十倍率</option>';
+                        playInfoHTML += '</select>';
+                        playInfoHTML += '</div>';
+                        playInfoHTML += '</div>';
+                    }else{
+                        playInfoHTML += '<div class="layui-text-bottom layui-row vedio-button-select" style="height: 45px;">';
+                        playInfoHTML += '</div>';
+                    }
+                    playInfoHTML += '</div>';
+                    playInfoHTML += '</div>';
+                }
+
+                $("#playInfoShow").html("");
+                $("#playInfoShow").html(playInfoHTML);
+                for(var i=0;i<vedioLength;i++){
+                    var player = new EZUIPlayer('player'+i);
+                    player.play();
+                }
+
+            })
+        }
+
+        //直播视频播放事件,信任处理
+        $scope.videoUrlFun = function(url){
+            urlFun = $sce.trustAsResourceUrl(url);
+            return urlFun;
+        };
+    });
+
+    app.filter("trustUrl", ['$sce', function ($sce) {
+        return function (recordingUrl) {
+            return $sce.trustAsResourceUrl(recordingUrl);
+        };
+    }]);
+
+
+
+    //开始控制
+    //0-上，1-下，2-左，3-右，4-左上，5-左下，6-右上，7-右下，8-放大，9-缩小，10-近焦距，11-远焦距
+    //默认为步进，点一下就停止
+    var control=function (direction,token,deviceSerial) {
+
+        data.direction=direction;
+        data.speed=1;
+        data.accessToken=token;
+        data.deviceSerial=deviceSerial;
+        layui.use(['jquery', 'layer'], function(){
+            var $ = layui.$
+                ,layer = layui.layer;
+            var speed = $("#speed").val();
+            if (speed != null && speed != '') {
+                data.speed=speed;
+            }
+
+            var moving = $("#moving").val();
+            if (moving != null&& moving != '') {
+                //连动
+                if (moving == 1) {
+                    $.post('https://open.ys7.com/api/lapp/device/ptz/start',data,function(res){
+                        if(res.code==200){
+                            layer.msg(res.msg, {time: 2000});
+                        }else{
+                            layer.msg(res.msg, {time: 2000});
+                        }
+                    },'json');
+
+                } else {
+                    //步进,动一下就停
+                    $.post('https://open.ys7.com/api/lapp/device/ptz/start',data,function(res){
+                    },'json');
+                    $.post('https://open.ys7.com/api/lapp/device/ptz/stop',data,function(res){
+                        console.info("stop res")
+                        if(res.code==200){
+                            layer.msg(res.msg, {time: 2000});
+                        }else{
+                            layer.msg(res.msg, {time: 2000});
+                        }
+                    },'json');
+                }
+            }else{
+                console.info("start",direction);
+                //步进,动一下就停
+                $.post('https://open.ys7.com/api/lapp/device/ptz/start',data,function(res){
+                    //alert("123");
+                    if(res.code==200){
+                        sleep($("#frame").val()); //当前方法暂停5秒
+                        stopPlay();
+                    }
+                },'json');
+            }
+            return false;
+        });
+    }
+
+
+    function sleep(d){
+        for(var t = Date.now();Date.now() - t <= d;);
+    }
+
+
+    function startPlay(direction,token,deviceSerial){
+        data.direction=direction;
+        data.speed=1;
+        data.accessToken=token;
+        data.deviceSerial=deviceSerial;
+        layui.use(['jquery', 'layer'], function(){
+            var $ = layui.$
+                ,layer = layui.layer;
+            var speed = $("#speed").val();
+            if (speed != null && speed != '') {
+                data.speed=speed;
+            }
+
+            var moving = $("#moving").val();
+            if (moving != null&& moving != '') {
+                //连动
+                if (moving == 1) {
+                    $.post('https://open.ys7.com/api/lapp/device/ptz/start',data,function(res){
+                        if(res.code==200){
+                            layer.msg(res.msg, {time: 2000});
+                        }else{
+                            layer.msg(res.msg, {time: 2000});
+                        }
+                    },'json');
+
+                } else {
+                    //步进,动一下就停
+                    $.post('https://open.ys7.com/api/lapp/device/ptz/start',data,function(res){
+                    },'json');
+                    $.post('https://open.ys7.com/api/lapp/device/ptz/stop',data,function(res){
+                        console.info("stop res")
+                        if(res.code==200){
+                            layer.msg(res.msg, {time: 2000});
+                        }else{
+                            layer.msg(res.msg, {time: 2000});
+                        }
+                    },'json');
+                }
+            }else{
+                console.info("start",direction);
+                //步进,动一下就停
+                $.post('https://open.ys7.com/api/lapp/device/ptz/start',data,function(res){
+                    //alert("123");
+                    if(res.code==200){
+                        sleep($("#frame").val()); //当前方法暂停5秒
+                        stopPlay();
+                    }
+                },'json');
+            }
+            return false;
+        });
+    }
+
+    function stopPlay(){
+        console.info("123");
+        $.post('https://open.ys7.com/api/lapp/device/ptz/stop',data,function(res){
+            if(res.code==200){
+                //layer.msg(res.msg, {time: 1000});
+            }else{
+                //layer.msg(res.msg, {time: 1000});
+            }
+        },'json');
+    }
+    //停止转动
+    var stop=function () {
+        layui.use(['jquery', 'layer'], function(){
+            var $ = layui.$ //重点处
+                ,layer = layui.layer;
+            console.info(stop);
+            console.info(data);
+            $.post('https://open.ys7.com/api/lapp/device/ptz/stop',data,function(res){
+                if(res.code==200){
+                    layer.msg(res.msg, {time: 2000});
+                }else{
+                    layer.msg(res.msg, {time: 2000});
+                }
+            },'json');
+            return false;
+        });
+
+    }
+    //抓拍
+    var capture=function () {
+        layui.use(['jquery', 'layer'], function(){
+            var $ = layui.$
+                ,layer = layui.layer;
+            $.post('https://open.ys7.com/api/lapp/device/capture',data,function(res){
+                if(res.code==200){
+                    layer.msg(res.msg, {time: 2000});
+                    //抓图成功后将这个地址传递到后台,下载下来保存到阿里云
+                    console.info("抓拍")
+                    console.info(res.data.picUrl)
+                    $.get('/vedios/savePic?picUrl='+res.data.picUrl,function (res) {
+                        ayer.msg('抓图成功', {time: 2000});
+                    })
+                }else{
+                    layer.msg(res.msg, {time: 2000});
+                }
+            },'json');
+        })
+    }
+
+</script>
+
+<script>
+    /*var player1 = new EZUIPlayer('player1');
+    var player2 = new EZUIPlayer('player2');
+    var player3= new EZUIPlayer('player3');*/
+</script>
+</body>
+</html>

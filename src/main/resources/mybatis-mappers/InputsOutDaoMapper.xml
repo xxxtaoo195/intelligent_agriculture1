@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.topwulian.dao.InputsOutDao">
+
+	<sql id="where">
+		<where>
+			<if test="params.id != null and params.id != ''">
+				and id = #{params.id}
+			</if>
+			<if test="params.deviceId != null and params.deviceId != ''">
+				and deviceId = #{params.deviceId}
+			</if>
+		</where>
+	</sql>
+
+
+	<select id="count" resultType="int">
+		select count(*) from t_inputs_out o
+		inner join t_inputs_batch b on o.batchId = b.batchId
+		inner join
+		(
+		select a.*,t.inputsName,t.inputsType,f.factoryName from t_inputs_act a
+		inner join t_inputs_type t on a.inputsId = t.inputsId
+		inner join t_inputs_factory f on a.fid = f.id
+		) a on b.inputsId =  a.inputsId
+		WHERE 1=1
+		<if test="params.errStatus != null and params.errStatus != ''">
+			and s.errStatus = #{params.errStatus}
+		</if>
+		<if test="params.inputsType != null and params.inputsType != ''">
+			and a.inputsType = #{params.inputsType}
+		</if>
+		<if test="params.batchId != null and params.batchId != ''">
+			and s.batchId like lower(concat('%',#{params.batchId},'%'))
+		</if>
+		<if test="params.inputsName != null and params.inputsName != ''">
+			and a.inputsName like lower(concat('%',#{params.inputsName},'%'))
+		</if>
+		<if test="params.farmId != null and params.farmId != ''">
+			and b.farmId = #{params.farmId}
+		</if>
+	</select>
+
+	<select id="list" resultType="com.topwulian.model.InputsOut">
+		select o.*,b.stockNumber,a.isToxicity,a.qualityMonth,a.inputsUnit, a.inputsName,a.inputsType,a.factoryName from t_inputs_out o
+		inner join t_inputs_batch b on o.batchId = b.batchId
+		inner join
+		(
+		select a.*,t.inputsName,t.inputsType,f.factoryName from t_inputs_act a
+		inner join t_inputs_type t on a.inputsId = t.inputsId
+		inner join t_inputs_factory f on a.fid = f.id
+		) a on b.inputsId =  a.inputsId
+		WHERE 1=1
+		<if test="params.inputsType != null and params.inputsType != ''">
+			and a.inputsType = #{params.inputsType}
+		</if>
+		<if test="params.batchId != null and params.batchId != ''">
+			and s.batchId like lower(concat('%',#{params.batchId},'%'))
+		</if>
+		<if test="params.inputsName != null and params.inputsName != ''">
+			and a.inputsName like lower(concat('%',#{params.inputsName},'%'))
+		</if>
+		<if test="params.farmId != null and params.farmId != ''">
+			and b.farmId = #{params.farmId}
+		</if>
+		ORDER BY  o.outStockDate DESC
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+
+
+
+</mapper>

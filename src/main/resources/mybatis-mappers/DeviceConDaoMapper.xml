@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.topwulian.dao.DeviceConDao">
+
+
+	<select id="listDeviceCon" resultType="com.topwulian.model.DeviceCon">
+		select d.*  from t_monpoints_device_con c
+		inner join t_monpoints t on c.mid = t.id
+		inner join t_device_con d on c.deviceId = d.id
+		where  t.monpointsid =  #{monpointsid}
+	</select>
+
+</mapper>

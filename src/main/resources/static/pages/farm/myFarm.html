@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>我的基地首页一</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+
+	<link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+	<link rel="stylesheet" href="../../layuiadmin/style/template.css" media="all">
+	<link rel="stylesheet" href="../../layuiadmin/layui/font/font_2wmcsfamra2/iconfont.css">
+
+	<!--<link rel="stylesheet" href="../../layuiadmin/style/bug.css">-->
+	<link rel="stylesheet" href="" id='bugcss'>
+	<link rel="stylesheet" href="../../css/index.css" id='indexcss'>
+
+	<link rel="stylesheet" href="../../layui/css/modules/laydate/default/laydate.css">
+
+
+	<link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+
+
+
+
+	<script type="text/javascript">
+		document.querySelector('#bugcss').href = '../../layuiadmin/style/bug.css?v=1.0&code=' + new Date();
+	</script>
+
+	<style>
+		#container {
+			width: auto; height: 400px;
+		}
+
+
+		.layuiadmin-card-text {
+			background-color: #efefef;
+		}
+
+		.topOne {
+			width: auto; min-height: 407px;height: auto;
+		}
+
+
+
+		.amap-icon img {
+			width: 25px;
+			height: 34px;
+		}
+
+		.amap-marker-label{
+			border: 0;
+			background-color: transparent;
+		}
+
+		.info{
+			position: relative;
+			top: 0;
+			right: 0;
+			min-width: 0;
+		}
+
+
+		.layui-form-label {
+			float: left;
+			display: block;
+			padding: 0px 0px;
+			width: auto;
+			font-weight: 400;
+			line-height: 20px;
+			text-align: right;
+			font-size: 16px;
+		}
+
+		.layui-form-item {
+			margin-bottom: 5px;
+			clear: both;
+			*zoom: 1;
+		}
+
+		.device_span{
+			font-size: 17px;
+			color: #232323;
+			font-family:SourceHanSansCN-Regular;
+			margin-left: -20px;
+		}
+
+		.device_info{
+			margin-left: 10px;
+		}
+
+		#map {width: 100%;height: 100%;margin:0;}
+
+
+
+		#googleMap {
+			width: auto; height: 400px;
+		}
+
+
+
+	</style>
+</head>
+<body ng-app="ia" ng-controller="myFarmController" ng-init="getFarmInfo()">
+<div class="layui-fluid myfarm3">
+	<div class="layui-row layui-col-space15">
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header my-flex">
+					<strong style="font-size: 18px">{{farm.name}}基地欢迎您</strong>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="layui-row layui-col-space15 a1">
+		<div class="layui-col-md9">
+			<div class="layui-card">
+				<div class="layui-card-header my-flex">
+					<strong>产地详情</strong>
+				</div>
+				<!--<div class="layui-card-body" id="container">
+                </div>-->
+
+				<!--<div id="map" style="width: 300px; height: 300px"></div>-->
+
+				<!--<div id="googleMap" style="width:500px;height:380px;"></div>-->
+
+				<div id="map_div">
+					<div class="layui-row layui-col-space15" >
+
+						<div class="layui-col-sm3">
+							<table class="layui-table layuiadmin-page-table" lay-skin="line">
+								<thead>
+								<tr>
+									<th>标记</th>
+									<th>区域</th>
+									<td>面积</td>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td><div style="background-color: #FF0000;width: 20px;height: 20px;opacity: 0.5%"></div></td>
+									<td>大棚育苗区</td>
+									<td>10000m²</td>
+								</tr>
+								<tr>
+									<td><div style="background-color: #308430;width: 20px;height: 20px;opacity: 0.5%"></div></td>
+									<td>森林防护区</td>
+									<td>800亩</td>
+								</tr>
+								<tr>
+									<td><div style="background-color: #99CC00;width: 20px;height: 20px;opacity: 0.5%"></div></td>
+									<td>茶园种植区</td>
+									<td>1500亩</td>
+								</tr>
+								<tr>
+									<td><div style="background-color: #16DCDC;width: 20px;height: 20px;opacity: 0.5%"></div></td>
+									<td>茶叶加工厂区</td>
+									<td>4500m²</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="layui-col-sm9" >
+							<div id="googleMap"></div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+
+		<div class="layui-col-md3">
+			<div class="layui-card">
+				<div class="layui-card-header my-flex">
+					<strong>设备预警</strong>
+					<span style="float: right"><a href="../device/deviceThresholdInfo.html">更多信息 > </a></span>
+				</div>
+				<div class="layui-card-body topOne" >
+					<table class="layui-table" lay-skin="nob">
+						<colgroup>
+							<col width="20%">
+							<col width="30%">
+							<col width="40%">
+						</colgroup>
+						<thead>
+						<tr>
+							<th>设备名称</th>
+							<th>监测点</th>
+							<th>预警时间</th>
+						</tr>
+						</thead>
+						<tbody ng-repeat="deviceThreshold in deviceThresholdList" ng-if="$index < 8">
+						<tr style="color: #E54F4F">
+							<td style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;cursor:pointer;" title='{{deviceThreshold.name}}'>{{deviceThreshold.name | limitTo :(deviceThreshold.name.length-3):0}}</td>
+							<td>{{deviceThreshold.monpointsName}}</td>
+							<td>{{deviceThreshold.remindDate  | limitTo :10:0}}</td>
+						</tr>
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="layui-row layui-col-space15">
+
+		<div class="layui-col-md7">
+			<div class="layui-card">
+				<div class="layui-card-header my-flex">
+					<strong>设备信息</strong>
+
+
+
+					<div class='col-md-1' style="margin-left: 1%">
+						<select name="modules" lay-verify="required" lay-search="" style="width: 100%" class='form-control' name='device_info' id='device_info' >
+						</select>
+					</div>
+
+
+
+				</div>
+				<div class="layui-card-body" style="height: 30%">
+					<div class="layui-row layui-col-space10" id="gatherInfo_div">
+						<!--<div class="layui-col-xs12 layui-col-sm4 "  ng-repeat="realTimeData in realTimeDataList" ng-if="$index < 6">
+							<div class="layuiadmin-card-text" onclick="toEnvMoniter(realTimeData.deviceId)">
+								<div class="layui-text-top" style="font-size: 19px">{{realTimeData.measureUnitType}}<div style="float: right"><img src="http://www.topwulian.com/devicelogo/{{realTimeData.deviceSn}}.png" class="airTemperature_img" /></div></div>
+								<p class="layui-text-center" ><div class="font-size: 36px;">{{realTimeData.basicData}}<span>{{isIfNull(realTimeData.measurementUnitName)?"":realTimeData.measurementUnitName}}</span></div></p>
+							</div>
+						</div>
+
+						<div class="layui-col-xs12 layui-col-sm12" ng-show="realDatelegend==0">
+							<div class="layuiadmin-card-text" style="height: 170px;    background-color: #FFF;">
+								<div class="layui-text-top" style="font-size: 19px"></div>
+								<p class="layui-text-center" ><div class="airTemperature_data"></div></p>
+							</div>
+						</div>
+
+						<div class="layui-col-xs12 layui-col-sm12" ng-show="realDatelegend<=3">
+							<div class="layuiadmin-card-text" style="height: 170px;    background-color: #FFF;">
+								<div class="layui-text-top" style="font-size: 19px"></div>
+								<p class="layui-text-center" ><div class="airTemperature_data"></div></p>
+							</div>
+						</div>
+						<span style="float: right"><a href="../envmoniter/moniter.html">更多信息 > </a></span>-->
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="layui-col-md5">
+			<div class="layui-card">
+				<div class="layui-card-header my-flex">
+					<strong>控制设备</strong>
+
+					<div class='col-md-1' style="margin-left: 1%">
+						<select name="modules" lay-verify="required" lay-search="" style="width: 100%" class='form-control' name='device_con' id='device_con'>
+						</select>
+					</div>
+				</div>
+				<div class="layui-card-body" style="height: 30%">
+					<form class="layui-form" action="" lay-filter="component-form-element">
+						<div class="layui-row layui-col-space10" id="deviceCon_DIV">
+							<div class="layui-col-xs12 layui-col-sm6 " >
+								<div class="layuiadmin-card-text">
+									<div class="layui-form-item">
+										<label class="layui-form-label">设备名称：</label>
+										<div class="layui-input-block">
+											<span class="device_span">增氧泵</span>
+										</div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">设备地址：</label>
+										<div class="layui-input-block">
+											<span class="device_span">基地</span>
+										</div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">设备状态：</label>
+										<div class="layui-input-block device_info">
+											<input type="checkbox" name="marriage" lay-skin="switch" lay-text="开|关"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关</em><i></i></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<span style="float: right"><a href="../envmoniter/envMoniter.html">更多信息 > </a></span>
+						</div>
+
+
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<div class="layui-row layui-col-space15">
+
+		<div class="layui-col-md7" >
+			<div class="cardbox">
+				<div class="layui-card modelb" style="height: 587px;">
+					<div class="layui-card-header my-flex">
+						<strong>{{vedio.name}} </strong>
+						<div class="layui-btn-group layuiadmin-btn-group">
+							<a ng-href="../device/vedio/vedio.html" class="layui-btn layui-btn-normal layui-btn-sm">视频控制</a>
+							<a ng-click="switchVedio(-1)" class="layui-btn layui-btn-normal layui-btn-sm">上一个</a>
+							<a ng-click="switchVedio(1)" class="layui-btn layui-btn-normal layui-btn-sm">下一个</a>
+							<a href="../device/vedio/addVedio.html" class="layui-btn layui-btn-normal layui-btn-sm">新增</a>
+						</div>
+					</div>
+					<div class="layui-card-body" id="playShow" style="width: 100%;max-height: 300px;">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-col-md5">
+			<div class="layui-card">
+				<div class="layui-card-header">生产记录</div>
+				<div class="layui-card-body" style="height: auto; min-height: 545px;" id="t_task_list">
+
+					<ul class="layui-timeline">
+						<li class="layui-timeline-item">
+							<i class="layui-icon layui-timeline-axis"></i>
+							<div class="layui-timeline-content layui-text">
+								<div class="layui-timeline-title">生产任务实例:</div>
+								<div class="layui-timeline-title">
+									<span>生产任务 : 育秧</span><span style="margin-left: 20px">活动描述 : 秧苗培育</span><span style="margin-left: 20px">操作人 : 张三</span><span style="margin-left: 20px">农事时间 : 2019-4-2</span>
+								</div>
+								<div class="layui-timeline-title">
+									<div class="layui-row layui-col-space15">
+										<div class="layui-col-md12">
+											<img width="90px" height="90px"  class="imgItem" alt="无图片加载" data-src="../../img/scrw/yy1.jpg" src="../../img/scrw/yy1.jpg">
+											<img width="90px" height="90px"  class="imgItem" alt="无图片加载" data-src="../../img/scrw/yy2.jpg" src="../../img/scrw/yy2.jpg">
+											<img width="90px" height="90px"  class="imgItem" alt="无图片加载" data-src="../../img/scrw/yy3.jpg" src="../../img/scrw/yy3.jpg">
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</li>
+						<li class="layui-timeline-item">
+							<i class="layui-icon layui-timeline-axis"></i>
+							<div class="layui-timeline-content layui-text">
+								<div class="layui-timeline-title">
+									<span>生产任务 : 插秧</span><span style="margin-left: 20px">活动描述 : 插秧作业</span><span style="margin-left: 20px">操作人 : 李四</span><span style="margin-left: 20px">农事时间 : 2019-4-10</span>
+								</div>
+								<div class="layui-timeline-title">
+
+									<div class="layui-row layui-col-space15">
+										<div class="layui-col-md12">
+											<img width="90px" height="90px"  class="imgItem" alt="无图片加载" data-src="../../img/scrw/yy1.jpg" src="../../img/scrw/cy1.jpg">
+											<img width="90px" height="90px"  class="imgItem" alt="无图片加载" data-src="../../img/scrw/yy2.jpg" src="../../img/scrw/cy2.jpg">
+											<img width="90px" height="90px"  class="imgItem" alt="无图片加载" data-src="../../img/scrw/yy2.jpg" src="../../img/scrw/cy3.jpg">
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li class="layui-timeline-item">
+							<i class="layui-icon layui-timeline-axis"></i>
+							<div class="layui-timeline-content layui-text">
+								<div class="layui-timeline-title">
+									<span>生产任务 : 施肥</span><span style="margin-left: 20px">活动描述 : 田地施肥</span><span style="margin-left: 20px">操作人 : 王五</span><span style="margin-left: 20px">农事时间 : 2019-4-28</span>
+								</div>
+								<div class="layui-timeline-title">
+									<div class="layui-row layui-col-space15">
+										<div class="layui-col-md12">
+											<img width="90px" height="90px"  class="imgItem" alt="无图片加载" data-src="../../img/scrw/yy1.jpg" src="../../img/scrw/sf1.jpg">
+											<img width="90px" height="90px"  class="imgItem" alt="无图片加载" data-src="../../img/scrw/yy2.jpg" src="../../img/scrw/sf2.jpg">
+											<img width="90px" height="90px"  class="imgItem" alt="无图片加载" data-src="../../img/scrw/yy3.jpg" src="../../img/scrw/sf3.jpg">
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+
+
+</div>
+</div>
+
+</div>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js?t=1"></script>
+<script src="../../js/angularjs/angular.min.js"></script>
+<script src="../../videojs/ezuikit.js"></script>
+<script src="../../js/jquery-2.1.1.min.js"></script>
+
+<!--<script type="text/javascript" src="https://webapi.amap.com/demos/js/liteToolbar.js"></script>-->
+
+<!--<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=1ba22c1bc7a25aae412d92e4d41fb0ad&plugin=Map3D,AMap.DistrictSearch,AMap.DistrictLayer"></script>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>-->
+
+<!-- AIzaSyBWunvE6m8euuH0M9jCePwSXRIPaipYU9k -->
+
+<script async defer src="http://maps.google.cn/maps/api/js?key=AIzaSyCHH26wp9a4hcTYYjTtAzsuBDZYgOyYzQo&amp;libraries=places&amp;callback=initialize"></script>
+
+
+
+
+
+
+
+<script type="text/javascript">
+	var map;
+	var myLatLng = {lat: 28.213967, lng: 112.891186};
+	var markers = [];
+	function initialize() {
+		var mapOptions = {
+			zoom: 17,
+			center: myLatLng,
+			mapTypeId : google.maps.MapTypeId.HYBRID
+		};
+		map = new google.maps.Map(document.getElementById('googleMap'),mapOptions);
+
+		addMarker(myLatLng,'湖南机智物联');
+
+		// Define the LatLng coordinates for the polygon's path.
+		/*var triangleCoords = [
+            {lat: 27.0277705258, lng: 112.3976439485},
+            {lat: 27.0268912690, lng: 112.3970002183},
+            {lat: 27.0266045533, lng: 112.3982018480},
+            {lat: 27.0273691268, lng: 112.3986953744}
+        ];
+
+        // Construct the polygon.
+        var bermudaTriangle = new google.maps.Polygon({
+            paths: triangleCoords,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35
+        });
+        bermudaTriangle.setMap(map);*/
+	}
+	/*function loadScript() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'http://maps.google.cn/maps/api/js?key=AIzaSyCHH26wp9a4hcTYYjTtAzsuBDZYgOyYzQo&amp;libraries=places&amp;callback=initialize&sensor=false&' +
+                'callback=initialize';
+        document.body.appendChild(script);
+    }
+    window.onload = loadScript;*/
+
+
+	//向地图添加标记并推送到数组。
+	function addMarker(location,titleStr){
+		// The marker, positioned at Uluru
+		var marker = new google.maps.Marker({
+			position: location,
+			map: map,
+			title: titleStr
+		});
+
+		markers.push(marker);
+		console.info(location);
+	}
+
+	//设置数组中所有标记的地图。
+	function setMapOnAll(map){
+		for(var i = 0; i <markers.length; i ++){
+			markers[i].setMap(map);
+		}
+	}
+
+	//从地图中删除标记，但将它们保留在数组中。
+	function clearMarkers(){
+		setMapOnAll(null);
+	}
+
+	function paintingMap(){
+		var triangleCoords = [
+			{lat: 27.715911, lng: 111.369420},
+			{lat: 27.715835, lng: 111.369632},
+			{lat: 27.716075, lng: 111.370176},
+			{lat: 27.716229, lng: 111.370122},
+			{lat: 27.716722, lng: 111.370684},
+			{lat: 27.716762, lng: 111.371270},
+			{lat: 27.716522, lng: 111.371519},
+			{lat: 27.716375, lng: 111.371943},
+			{lat: 27.716698, lng: 111.372093},
+			{lat: 27.716864, lng: 111.371664},
+			{lat: 27.717009, lng: 111.371251},
+			{lat: 27.716959, lng: 111.370685},
+			{lat: 27.716864, lng: 111.370489},
+			{lat: 27.716615, lng: 111.370041},
+			{lat: 27.716522, lng: 111.369934},
+			{lat: 27.716389, lng: 111.369615},
+			{lat: 27.716311, lng: 111.369580},
+			{lat: 27.716226, lng: 111.369414},
+			{lat: 27.716110, lng: 111.369344},
+			{lat: 27.715911, lng: 111.369435}
+		];
+
+		var triangleCoords2 = [
+			{lat: 27.710379, lng: 111.370384},
+			{lat: 27.710442, lng: 111.370532},
+			{lat: 27.710789, lng: 111.370568},
+			{lat: 27.711140, lng: 111.370434},
+			{lat: 27.711192, lng: 111.369769},
+			{lat: 27.711415, lng: 111.369764},
+			{lat: 27.711353, lng: 111.370075},
+			{lat: 27.711652, lng: 111.370392},
+			{lat: 27.711956, lng: 111.370424},
+			{lat: 27.712108, lng: 111.370311},
+			{lat: 27.712426, lng: 111.370509},
+			{lat: 27.712823, lng: 111.370465},
+			{lat: 27.712865, lng: 111.370133},
+			{lat: 27.712965, lng: 111.370103},
+			{lat: 27.713092, lng: 111.370229},
+			{lat: 27.713233, lng: 111.370078},
+			{lat: 27.713248, lng: 111.369568},
+			{lat: 27.713186, lng: 111.369062},
+			{lat: 27.713323, lng: 111.368972},
+			{lat: 27.713271, lng: 111.368677},
+			{lat: 27.713200, lng: 111.368618},
+			{lat: 27.713262, lng: 111.368446},
+			{lat: 27.713559, lng: 111.368533},
+			{lat: 27.713604, lng: 111.368236},
+			{lat: 27.713386, lng: 111.368163},
+			{lat: 27.713630, lng: 111.368063},
+			{lat: 27.713742, lng: 111.368357},
+			{lat: 27.714058, lng: 111.368484},
+			{lat: 27.714376, lng: 111.368417},
+			{lat: 27.714528, lng: 111.368562},
+			{lat: 27.713880, lng: 111.369108},
+			{lat: 27.713724, lng: 111.369657},
+			{lat: 27.714132, lng: 111.370215},
+			{lat: 27.714502, lng: 111.370354},
+			{lat: 27.714094, lng: 111.371159},
+			{lat: 27.714622, lng: 111.371312},
+			{lat: 27.714631, lng: 111.371607},
+			{lat: 27.714052, lng: 111.372101},
+			{lat: 27.713976, lng: 111.372949},
+			{lat: 27.714859, lng: 111.373196},
+			{lat: 27.715068, lng: 111.373475},
+			{lat: 27.716360, lng: 111.372338},
+			{lat: 27.716540, lng: 111.371351},
+			{lat: 27.716018, lng: 111.370482},
+			{lat: 27.715724, lng: 111.369366},
+			{lat: 27.715487, lng: 111.368969},
+			{lat: 27.715262, lng: 111.368237},
+			{lat: 27.714616, lng: 111.367786},
+			{lat: 27.714360, lng: 111.367850},
+			{lat: 27.714189, lng: 111.367338},
+			{lat: 27.713743, lng: 111.366745},
+			{lat: 27.713297, lng: 111.366874},
+			{lat: 27.712395, lng: 111.368537},
+			{lat: 27.712148, lng: 111.368859},
+			{lat: 27.712091, lng: 111.369428},
+			{lat: 27.711654, lng: 111.369643},
+			{lat: 27.711528, lng: 111.368968},
+			{lat: 27.710949, lng: 111.369140},
+			{lat: 27.710730, lng: 111.369440},
+			{lat: 27.710597, lng: 111.370234},
+			{lat: 27.710388, lng: 111.370341},
+			{lat: 27.710444, lng: 111.370459}
+		];
+		var triangleCoords3 = [
+			{lat: 27.709870, lng: 111.373023},
+			{lat: 27.710256, lng: 111.373057},
+			{lat: 27.710133, lng: 111.373426},
+			{lat: 27.710057, lng: 111.373780},
+			{lat: 27.710493, lng: 111.373900},
+			{lat: 27.710806, lng: 111.375732},
+			{lat: 27.711928, lng: 111.376367},
+			{lat: 27.712707, lng: 111.375841},
+			{lat: 27.715328, lng: 111.373824},
+			{lat: 27.714668, lng: 111.373189},
+			{lat: 27.713932, lng: 111.372902},
+			{lat: 27.713970, lng: 111.372108},
+			{lat: 27.714128, lng: 111.371204},
+			{lat: 27.714251, lng: 111.370635},
+			{lat: 27.714499, lng: 111.370487},
+			{lat: 27.714066, lng: 111.370202},
+			{lat: 27.713800, lng: 111.369392},
+			{lat: 27.713876, lng: 111.369086},
+			{lat: 27.714503, lng: 111.368560},
+			{lat: 27.713800, lng: 111.368292},
+			{lat: 27.713363, lng: 111.368077},
+			{lat: 27.713585, lng: 111.368202},
+			{lat: 27.713528, lng: 111.368524},
+			{lat: 27.713265, lng: 111.368495},
+			{lat: 27.713255, lng: 111.370040},
+			{lat: 27.711526, lng: 111.370952},
+			{lat: 27.710586, lng: 111.372057},
+			{lat: 27.709893, lng: 111.373012}
+		];
+		var triangleCoords4 = [
+			{lat: 27.706539, lng: 111.370907},
+			{lat: 27.706786, lng: 111.370968},
+			{lat: 27.707085, lng: 111.371242},
+			{lat: 27.707185, lng: 111.371516},
+			{lat: 27.707475, lng: 111.371822},
+			{lat: 27.707993, lng: 111.372106},
+			{lat: 27.707904, lng: 111.372286},
+			{lat: 27.708602, lng: 111.372714},
+			{lat: 27.708588, lng: 111.372966},
+			{lat: 27.708484, lng: 111.373283},
+			{lat: 27.708066, lng: 111.373321},
+			{lat: 27.707696, lng: 111.373096},
+			{lat: 27.707739, lng: 111.372903},
+			{lat: 27.707454, lng: 111.372656},
+			{lat: 27.707596, lng: 111.372270},
+			{lat: 27.707116, lng: 111.371905},
+			{lat: 27.706518, lng: 111.370913}
+		];
+		var triangleCoords5 = [
+			{lat: 27.707046, lng: 111.372075},
+			{lat: 27.707368, lng: 111.372276},
+			{lat: 27.707189, lng: 111.372536},
+			{lat: 27.706947, lng: 111.372309},
+			{lat: 27.707046, lng: 111.372075}
+		];
+
+		// Construct the polygon.
+		var bermudaTriangle = new google.maps.Polygon({
+			paths: triangleCoords,
+			strokeColor: '#FF0000',
+			strokeOpacity: 0.4,
+			strokeWeight: 2,
+			fillColor: '#FF0000',
+			fillOpacity: 0.2
+		});
+
+		var bermudaTriangle2 = new google.maps.Polygon({
+			paths: triangleCoords2,
+			strokeColor: '#308430',
+			strokeOpacity: 0.4,
+			strokeWeight: 2,
+			fillColor: '#308430',
+			fillOpacity: 0.3
+		});
+		var bermudaTriangle3 = new google.maps.Polygon({
+			paths: triangleCoords3,
+			strokeColor: '#99CC00',
+			strokeOpacity: 0.4,
+			strokeWeight: 2,
+			fillColor: '#99CC00',
+			fillOpacity: 0.2
+		});
+		var bermudaTriangle4 = new google.maps.Polygon({
+			paths: triangleCoords4,
+			strokeColor: '#99CC00',
+			strokeOpacity: 0.4,
+			strokeWeight: 2,
+			fillColor: '#99CC00',
+			fillOpacity: 0.2
+		});
+		var bermudaTriangle5 = new google.maps.Polygon({
+			paths: triangleCoords5,
+			strokeColor: '#16DCDC',
+			strokeOpacity: 0.4,
+			strokeWeight: 2,
+			fillColor: '#16DCDC',
+			fillOpacity: 0.2
+		});
+		bermudaTriangle.setMap(map);
+		bermudaTriangle2.setMap(map);
+		bermudaTriangle3.setMap(map);
+		bermudaTriangle4.setMap(map);
+		bermudaTriangle5.setMap(map);
+
+
+		var icons = {
+			info: {
+				icon: 'http://www.topwulian.com/devicelogo/xst.png'
+			}
+		};
+
+		var features = [
+			{
+				position: new google.maps.LatLng(27.711410, 111.373224),
+				type: 'info',
+				title:'摄像头'
+			},
+			{
+				position: new google.maps.LatLng(27.716282, 111.369884),
+				type: 'info',
+				title:'摄像头'
+			},
+			{
+				position: new google.maps.LatLng(27.707354, 111.371930),
+				type: 'info',
+				title:'摄像头'
+			},
+			{
+				position: new google.maps.LatLng(27.710589, 111.372915),
+				type: 'info',
+				title:'摄像头'
+			},
+			{
+				position: new google.maps.LatLng(27.712213, 111.376181),
+				type: 'info',
+				title:'摄像头'
+			},
+			{
+				position: new google.maps.LatLng(27.7112252969, 111.3715688466),
+				type: 'info',
+				title:'摄像头'
+			},
+			{
+				position: new google.maps.LatLng(27.7108263691, 111.3727061032),
+				type: 'info',
+				title:'摄像头'
+			},
+			{
+				position: new google.maps.LatLng(27.7141507235, 111.3744656323),
+				type: 'info',
+				title:'摄像头'
+			},
+		];
+
+		// Create markers.
+		for (var i = 0; i < features.length; i++) {
+			var marker = new google.maps.Marker({
+				position: features[i].position,
+				icon: icons[features[i].type].icon,
+				map: map,
+				title: features[i].title
+			});
+		};
+
+	}
+
+</script>
+
+<script>
+
+	data = {
+		accessToken: 'at.7x6uuoq80n16eob4abz2c4o9b1iv9okl-5j1vcm88mq-1tb8lrq-cwhbfstom',
+		deviceSerial: 'C32944171',
+		channelNo: '1'
+	}
+
+	var app = angular.module('ia', []); //myFarmController
+	app.controller('myFarmController', function($scope, $http,$sce) {
+
+		//使用anguljs双向绑定
+		$scope.layuiCssClass = ['layui-icon-console', 'layui-icon-chart', 'layui-icon-template-1', 'layui-icon-find-fill', 'layui-icon-survey', 'layui-icon-user', 'layui-icon-set', 'layui-icon-about', 'layui-icon-camera-fill', 'layui-icon-website', 'layui-icon-about'];
+
+		$scope.titleColorCssClass = ['first', 'second', 'third'];
+		$scope.uuu="";
+		$scope.currentTime = new Date();
+		//设备状态: 0 在线    1 离线
+		$scope.state = ['在线', '离线'];
+		//当前基地页面全部信息
+		$scope.getFarmInfo = function(farmId) {
+			$http.get('/farms/info/3/3').then(function(response) {
+				$scope.user = response.data.user;
+				$scope.farm = response.data.farm;
+				localStorage.setItem("farmid", $scope.farm.id);
+				//农情通知
+				$scope.recentlyNoticeList = response.data.recentlyNoticeList;
+				//设备报警
+				$scope.deviceNoticeList = response.data.deviceNoticeList;
+				//当前农场的设备列表信息
+				$scope.deviceList = response.data.deviceList;
+				$scope.deviceIndex = 0;
+				$scope.device = $scope.deviceList[$scope.deviceIndex];
+
+				/*//设备实时数据
+				$scope.realTimeDataList = response.data.realTimeDataList;
+
+				$scope.realDatelegend = $scope.realTimeDataList.length;*/
+
+				$scope.deviceThresholdList = response.data.deviceThresholdList;
+
+
+				//监测点
+				$scope.monpointsList = response.data.monpointsList;
+
+
+				if($scope.farm.id == '51'){
+
+				}else{
+					$("#map_div").html("");
+					var html = '<div class="layui-card-body" id="googleMap"> </div>';
+					$("#map_div").html(html);
+				}
+
+
+				var monAry = [];
+				if($scope.monpointsList.length>0){
+					var htmlStrInfo = "<option value=\"\">请选择监测点</option>";
+					var htmlStrCon = htmlStrInfo;
+					var info = '0';
+					for(var i = 0 ; i < $scope.monpointsList.length ; i++){
+
+						if($scope.monpointsList[i].monpointstype=='0'){
+
+							htmlStrCon +="<option value='"+$scope.monpointsList[i].monpointsid+"'>"+$scope.monpointsList[i].monpointsName+"</option>";
+
+							monAry.push($scope.monpointsList[i]);
+						}else{
+							if(info != '2'){
+								info = '1';
+								htmlStrInfo +="<option value='"+$scope.monpointsList[i].monpointsid+"' selected>"+$scope.monpointsList[i].monpointsName+"</option>";
+							}else{
+								htmlStrInfo +="<option value='"+$scope.monpointsList[i].monpointsid+"'>"+$scope.monpointsList[i].monpointsName+"</option>";
+							}
+						}
+						if(info =='1'){
+							getDeviceInfo($scope.monpointsList[i].monpointsid);
+							info = '2';
+						}
+					}
+					$('#device_info').html(htmlStrInfo);
+					$('#device_con').html(htmlStrCon);
+				}else{
+					var htmlStrInfo = "<option value=\"\">暂无监测点</option>";
+					$('#device_info').html(htmlStrInfo);
+					$('#device_con').html(htmlStrInfo);
+				}
+				getDeviceConDiv(monAry);
+
+
+
+				//摄像头列表
+				$scope.vedioList = response.data.vedioList;
+				$scope.vedioIndex = 0;
+				$scope.vedio = $scope.vedioList[$scope.vedioIndex];
+
+
+
+
+				/*$apply(function(){
+                    var show = "<video  type=\"application/x-mpegURL\" width=\"100%\" style=\"max-height: 300px;\" id=\"player\" poster=\"controls playsInline webkit-playsinline autoplay\" > <source  src="+$scope.vedio.url+" type=\"application/x-mpegURL\"></video>";
+                    console.log(show);
+                    $("#playShow").html(show);
+
+                });*/
+
+				/*	$scope.name=$scope.vedio.id;*/
+
+				console.info($scope.farm.longitude+":"+$scope.farm.latitude);
+				console.info($scope.farm.longitude != null);
+				console.info($scope.farm.longitude != "null");
+				if($scope.farm.longitude == null){
+
+                    clearMarkers();
+                    markers = [];
+                    var  haightAshbury = {lat: parseFloat(28.213967), lng : parseFloat(112.891186)};
+
+                    var mapOptions = {
+                        zoom: 16,
+                        center: haightAshbury,
+                        mapTypeId : google.maps.MapTypeId.HYBRID
+                    };
+                    map = new google.maps.Map(document.getElementById('googleMap'),mapOptions);
+                    addMarker(haightAshbury,$scope.farm.name);
+
+				}else{
+					clearMarkers();
+					markers = [];
+					var  haightAshbury = {lat: parseFloat($scope.farm.longitude), lng : parseFloat($scope.farm.latitude)};
+
+					var mapOptions = {
+						zoom: 16,
+						center: haightAshbury,
+						mapTypeId : google.maps.MapTypeId.HYBRID
+					};
+					map = new google.maps.Map(document.getElementById('googleMap'),mapOptions);
+					addMarker(haightAshbury,$scope.farm.name);
+				}
+
+				console.info($scope.farm);
+				if($scope.farm.id == '51'){
+					paintingMap();
+				}
+
+				if(response.data.vedioList.length>0){
+					var show = '<video  type=\"application/x-mpegURL\" style=\"height:520px;width:98% \" id=\"player\" poster=\"\" controls playsInline webkit-playsinline autoplay > <source  src="'+ $scope.vedio.url + '" type=\"application/x-mpegURL\"></video>';
+					$("#playShow").html(show);
+					var player = new EZUIPlayer('player');
+					player.play();
+				}
+
+			})
+			/*//农情通知列表
+			$http.get('/notices/2').then(function(response) {
+				response = response.data;
+				// console.log(response.size());
+				//console.log(response);
+				var count=1;
+				var lis="";
+				for (var i=0;i<response.data.length;i++){
+					var data = response.data[i];
+					//console.log(data);
+					if (count>2){
+						break;
+					}
+					var str = data.updateTime.split(' ')[0];
+					var li="<li class=\"li\">"+data.title+" 更新时间:"+str+"</li>"
+					count++;
+					lis+=li;
+				}
+				$("#notice").html(lis);
+			})*/
+
+
+			$http.get('/tTasks/success').then(function(response) {
+				var result = response.data;
+				console.info(result);
+				console.info(result.data.length);
+				if(result.code == "0") {
+					var html = "";
+					if(result.data.length>0){
+						$("#t_task_list").html("");
+						html += '<ul class="layui-timeline">';
+						for(var i=0;i<result.data.length;i++){
+							var task = result.data[i];
+							var date = task.finishDate.split(' ')[0];
+							html += '<li class="layui-timeline-item">';
+							html += '<i class="layui-icon layui-timeline-axis"></i>';
+							html += '<div class="layui-timeline-content layui-text">';
+							html += '<div class="layui-timeline-title"><span>生产任务 : '+task.content+'</span><span style="margin-left: 20px">活动描述 : '+task.descContent+'</span><span style="margin-left: 20px">操作人 : '+task.username+'</span><span style="margin-left: 20px">农事时间 : '+date+'</span>';
+							html += '<div class="layui-timeline-title">' +
+									'<div class="layui-row layui-col-space15">' +
+									'<div class="layui-col-md12">' +
+									'<img width="90px" height="90px" class="imgItem" alt="无图片加载" data-src="'+task.img1+'" src="'+task.img1+'">' +
+									' <img width="90px" height="90px" class="imgItem" alt="无图片加载" data-src="'+task.img2+'" src="'+task.img2+'">' +
+									' <img width="90px" height="90px" class="imgItem" alt="无图片加载" data-src="'+task.img3+'" src="'+task.img3+'">' +
+									'</div>' +
+									'</div>' +
+									'</div>';
+							html += '</div>';
+							html += '</li>';
+							if(i==2){
+								break;
+							}
+
+						}
+						html += '</ul>';
+						$("#t_task_list").html(html);
+					}
+				}
+			})
+		}
+
+		//上一个下一个设备的处理方式,可以根据设备列表的索引处理
+		//上下循环
+		$scope.switchDevice = function(incr) {
+			$scope.deviceIndex = $scope.deviceIndex + incr;
+			if($scope.deviceIndex < 0) {
+				$scope.deviceIndex = $scope.deviceList.length - 1;
+			}
+			if($scope.deviceIndex >= $scope.deviceList.length) {
+				$scope.deviceIndex = 0;
+			}
+			$scope.device = $scope.deviceList[$scope.deviceIndex];
+		}
+
+		//上下循环摄像头
+		$scope.switchVedio = function(incr) {
+			$scope.vedioIndex = $scope.vedioIndex + incr;
+			if($scope.vedioIndex < 0) {
+				$scope.vedioIndex = $scope.vedioList.length - 1;
+			}
+			if($scope.vedioIndex >= $scope.vedioList.length) {
+				$scope.vedioIndex = 0;
+			}
+			$scope.vedio = $scope.vedioList[$scope.vedioIndex];
+
+
+			$("#playShow").html("");
+			var show = '<video  type=\"application/x-mpegURL\" style=\"height:520px;width:98% \" id=\"player\"  poster="" controls playsInline webkit-playsinline autoplay  > <source  src="'+ $scope.vedio.url + '" type=\"application/x-mpegURL\"></video>';
+			$("#playShow").html(show);
+			var player = new EZUIPlayer('player');
+			player.play();
+		}
+
+		//点击实时数据图表跳转到环境监测页面
+		$scope.toEnvMoniter = function(deviceId) {
+			window.location = '../envmoniter/envMoniter.html#?deviceId=' + deviceId;
+		}
+
+		$scope.isIfNull=function(data){
+			if (data == "") {
+				return true;
+			} else if(data == null){
+				return true;
+			} else if(data == "null"){
+				return true;
+			} else{
+				return false;
+			}
+		}
+
+	});
+
+
+	app.directive('embedSrc', function () {
+		return {
+			restrict: 'A',
+			link: function (scope, element, attrs) {
+				var current = element;
+				scope.$watch(attrs.embedSrc, function () {
+					var clone = element
+							.clone()
+							.attr('src', attrs.embedSrc);
+					current.replaceWith(clone);
+					current = clone;
+				});
+			}
+		};
+	})
+	//点击设置跳转到对应的修改页面并回显数据
+
+	/*var player1 = new EZUIPlayer('player1');
+    var player2 = new EZUIPlayer('player2');
+    var player3 = new EZUIPlayer('player3');
+    var player4 = new EZUIPlayer('player4');
+    var player5 = new EZUIPlayer('player5');*/
+
+	//var player = new EZUIPlayer('player');
+
+
+	$("#device_info").change(function(){
+		getDeviceInfo($("#device_info").val());
+	});
+	$("#device_con").change(function(){
+		getDeviceCon($("#device_con").val());
+	});
+
+
+	function getDeviceInfo(monpointsid,$scope){
+		var data = new FormData();
+		data.append("monpointsid",monpointsid);
+		data.append("type","0");
+		$.ajax({
+			type: 'post',
+			url: '/farms/getGatherInfo',
+			contentType:false,
+			processData: false,
+			data: data,
+			success: function (data) {
+				//设备实时数据
+				var realTimeData = data.realTimeDataList;
+				var html = '';
+				if(realTimeData.length>0){
+					for(var i = 0 ; i < realTimeData.length; i++){
+						var unitName = realTimeData[i].measurementUnitName;
+						if(unitName == "" || unitName == null || unitName == undefined){
+							unitName = "";
+						}
+						html += '<div class="layui-col-xs12 layui-col-sm4 ">';
+						html += '<div class="layuiadmin-card-text" onclick="toEnvMoniter('+realTimeData[i].deviceId+')" style="background-color: #06c475;color: #FFFFFF">';
+						html += '<div class="layui-text-top" style="font-size: 19px">'+realTimeData[i].measureUnitType+'<div style="float: right" ><img src="http://www.topwulian.com/devicelogo/'+realTimeData[i].deviceSn+'.png" class="airTemperature_img" /></div></div>';
+						html += '<p class="layui-text-center" ></p>';
+						html += '<div class="airTemperature_data" style="font-size: 36px;margin-top: -30px;height: 65px;">'+realTimeData[i].basicData+'<span>'+unitName+'</span></div>';
+						html += '<div style="font-size: 16px; position:absolute;font-family: "微软雅黑";margin-top: -7px;"><span>'+realTimeData[i].gatherTime+'</span></div>';
+						html += '</div>';
+						html += '</div>';
+						if(i==5){
+							break;
+						}
+					}
+
+					if(realTimeData.length<6){
+						var index = 6 - realTimeData.length;
+						for(var i=0;i<index;i++){
+							html +='<div class="layui-col-xs12 layui-col-sm4">';
+							html +='<div class="layuiadmin-card-text" style="height: 170px;    background-color: #FFF;">';
+							html +='<div class="layui-text-top" style="font-size: 19px"></div>';
+							html +='<p class="layui-text-center" ><div class="airTemperature_data"></div></p>';
+							html +='</div>';
+							html +='</div>';
+						}
+					}
+				}else{
+					if(realTimeData.length == 0){
+						for(var i=0;i<6;i++){
+							html +='<div class="layui-col-xs12 layui-col-sm4">';
+							html +='<div class="layuiadmin-card-text" style="height: 170px;    background-color: #FFF;">';
+							html +='<div class="layui-text-top" style="font-size: 19px"></div>';
+							html +='<p class="layui-text-center" ><div class="airTemperature_data"></div></p>';
+							html +='</div>';
+							html +='</div>';
+						}
+					}
+				}
+
+
+				html += '<span style="float: right"><a href="../envmoniter/envMoniter.html">更多信息 > </a></span>';
+				$("#gatherInfo_div").html("");
+				$("#gatherInfo_div").html(html);
+			},
+			error:function (){}
+		});
+	}
+
+	function getDeviceCon(monpointsid){
+		var data = new FormData();
+		data.append("monpointsid",monpointsid);
+		data.append("type","1");
+		$.ajax({
+			type: 'post',
+			url: '/farms/getGatherInfo',
+			contentType:false,
+			processData: false,
+			data: data,
+			success: function (data) {
+				getDeviceConDiv(data.monpointsList);
+			},
+			error:function (){}
+		});
+	}
+
+	function getDeviceConDiv(deviceConsListData){
+
+		var html = '';
+		if(deviceConsListData.length>0){
+
+			for(var i = 0; i < deviceConsListData.length; i++){
+				html += '<div class="layui-col-xs12 layui-col-sm12">';
+
+				html += '<div class="layuiadmin-card-text">';
+				html += '<div class="layui-form-item">';
+				html += '<label class="layui-form-label">设备名称：</label>';
+				html += '<div class="layui-input-block"><span class="device_span">'+deviceConsListData[i].monpointsDeviceName+'</span></div>';
+				html += '</div>';
+
+				html += '<div class="layui-form-item">';
+				html += '<label class="layui-form-label">设备地址：</label>';
+				html += '<div class="layui-input-block"><span class="device_span">'+deviceConsListData[i].monpointsAddress+'</span></div>';
+				html += '</div>';
+
+				html += '<div class="layui-form-item">';
+				html += '<label class="layui-form-label">设备状态：</label>';
+				html += '<div class="layui-input-block device_info layui-form" lay-filter="component-form-element">';
+				var deviceConList = deviceConsListData[i].deviceConList;
+				for(var j=0;j<deviceConList.length;j++){
+					//onchange="'+test(deviceConList[j].deviceCon)+'"
+					html +='<input type="radio" name="con'+i+'"  value="'+deviceConList[j].deviceCon+"|"+deviceConsListData[i].id+'" title="'+deviceConList[j].deviceName+'"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>'+deviceConList[j].deviceName+'</div></div>';
+				}
+				html += '</div>';
+				html += '</div>';
+
+				html += '</div>';
+				html += '</div>';
+			}
+
+
+
+
+			if(deviceConsListData.length<2){
+				var index = 2 - deviceConsListData.length;
+				for(var i=0;i<index;i++){
+					html += '<div class="layui-col-xs12 layui-col-sm12">';
+					html += '<div class="layuiadmin-card-text style="background-color: #FFF;" ">';
+
+					html += '<div class="layui-form-item">';
+					html += '<label class="layui-form-label"></label>';
+					html += '<div class="layui-input-block"><span class="device_span"></span></div>';
+					html += '</div>';
+
+					html += '<div class="layui-form-item">';
+					html += '<label class="layui-form-label"></label>';
+					html += '<div class="layui-input-block"></div>';
+					html += '</div>';
+
+					html += '<div class="layui-form-item">';
+					html += '<label class="layui-form-label"></label>';
+					html += '<div class="layui-input-block device_info"></div>';
+					html += '</div>';
+
+					html += '</div>';
+					html += '</div>';
+				}
+			}
+
+		}else{
+			if(deviceConsListData.length == 0){
+				for(var i=0;i<2;i++){
+					html += '<div class="layui-col-xs12 layui-col-sm12">';
+					html += '<div class="layuiadmin-card-text style="background-color: #FFF;" ">';
+
+					html += '<div class="layui-form-item">';
+					html += '<label class="layui-form-label"></label>';
+					html += '<div class="layui-input-block"><span class="device_span"></span></div>';
+					html += '</div>';
+
+					html += '<div class="layui-form-item">';
+					html += '<label class="layui-form-label"></label>';
+					html += '<div class="layui-input-block"></div>';
+					html += '</div>';
+
+					html += '<div class="layui-form-item">';
+					html += '<label class="layui-form-label"></label>';
+					html += '<div class="layui-input-block device_info"></div>';
+					html += '</div>';
+
+					html += '</div>';
+					html += '</div>';
+				}
+			}
+		}
+		html += '<span style="float: right"><a href="../envmoniter/envMoniter.html">更多信息 > </a></span>';
+		$("#deviceCon_DIV").html("");
+		$("#deviceCon_DIV").html(html);
+
+		getInfoRadio();
+
+	}
+
+
+	function deviceCon(con){
+		var data = new FormData();
+		data.append("con",con);
+		$.ajax({
+			type: 'post',
+			url: '/farms/deviceCon',
+			contentType:false,
+			processData: false,
+			data: data,
+			success: function (data) {
+
+			},
+			error:function (){}
+		});
+
+	}
+
+</script>
+<script>
+	/*window.onload=function(){
+
+            window.onresize = function(){
+                if(client().width<=991){
+                    return
+                }
+                setTimeout(function(){
+                    var adom = document.querySelector('.modela');
+                    var h = adom.offsetHeight-15;
+                    document.querySelector('.modelb').style.height = h+'px';
+                },1000)
+            }
+            window.onresize()
+        function client(){
+            return {
+                width:window.innerWidth|| document.documentElement.clientWidth|| document.body.clientWidth|| 0,
+                height:window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight|| 0
+            }
+        }
+    }*/
+
+
+
+	option = {
+		title : {
+			text: '某站点用户访问来源',
+			subtext: '纯属虚构',
+			x:'center'
+		},
+		tooltip : {
+			trigger: 'item',
+			formatter: "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend: {
+			orient : 'vertical',
+			x : 'left',
+			data:['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
+		},
+		toolbox: {
+			show : true,
+			feature : {
+				mark : {show: true},
+				dataView : {show: true, readOnly: false},
+				magicType : {
+					show: true,
+					type: ['pie', 'funnel'],
+					option: {
+						funnel: {
+							x: '25%',
+							width: '50%',
+							funnelAlign: 'left',
+							max: 1548
+						}
+					}
+				},
+				restore : {show: true},
+				saveAsImage : {show: true}
+			}
+		},
+		calculable : true,
+		series : [
+			{
+				name:'访问来源',
+				type:'pie',
+				radius : '55%',
+				center: ['50%', '60%'],
+				data:[
+					{value:335, name:'直接访问'},
+					{value:310, name:'邮件营销'},
+					{value:234, name:'联盟广告'},
+					{value:135, name:'视频广告'},
+					{value:1548, name:'搜索引擎'}
+				]
+			}
+		]
+	};
+
+
+</script>
+
+<script>
+
+	layui.config({
+		base: '../../layuiadmin/' //静态资源所在路径
+	}).extend({
+		index: 'lib/index' //主入口模块
+	}).use(['index', 'console','form'],function(){
+		var $ = layui.$
+				,admin = layui.admin
+				,element = layui.element
+
+
+		var form = layui.form;
+
+		form.on('submit(component-form-element)', function(data){
+			layer.msg(JSON.stringify(data.field));
+			return false;
+		});
+
+
+	});
+
+	function getInfoRadio(){
+		layui.use('form', function(){
+			var form = layui.form;
+			//从文档上复制的好像没有这句
+			form.render('radio');
+			//监听提交
+			form.on('submit(formDemo)', function(data){
+				layer.msg(JSON.stringify(data.field));
+				return false;
+			});
+
+			form.on('radio', function(data){
+				//console.log(data.elem); //得到radio原始DOM对象
+				//console.log(data.value); //被点击的radio的value值
+				deviceCon(data.value);
+			});
+		});
+	}
+
+</script>
+
+</body>
+
+</html>

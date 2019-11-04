@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" media="screen" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="../../css/dataTables.bootstrap.min.css">
+	<link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+	<link rel="stylesheet" type="text/css" href="../../js/city-picker/city-picker.css">
+	<!--<link rel="stylesheet" href="../../css/layui" media="all"/>-->
+
+	<link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all"/>
+	<script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>
+	<script src="../../js/city-picker/city-picker.data.js"></script>
+	<script src="../../js/city-picker/city-picker.js"></script>
+
+	<script src="../../layui/layui.all.js"></script>
+
+	<script src="../../layuiadmin/layui/layui.all.js"></script>
+
+
+
+	<link rel="stylesheet" type="text/css"  href="../../css/mytable.css">
+
+	<style>
+
+		html { overflow-y: scroll; }
+	</style>
+</head>
+<body>
+<div class="col-md-12">
+	<form class="form-horizontal main-form" onsubmit="return false" id="form">
+		<fieldset>
+			<input type="hidden" id="id" name="id">
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>投入品名称:</label>
+				<div class='col-md-3'>
+					<select name="modules" lay-verify="required" lay-search="" class='form-control'  name='inputsId' id='inputsId' onchange="getFactoryInfo()" >
+					</select>
+				</div>
+			</div>
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>生产厂家:</label>
+				<div class='col-md-3'>
+					<select name="modules" lay-verify="required" lay-search="" class='form-control'  name='manufactor' id='manufactor'>
+					</select>
+				</div>
+			</div>
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>供应商:</label>
+				<div class='col-md-3'>
+					<input class='form-control' placeholder='供应商' type='text' name='supplier' id='supplier'
+						   data-bv-notempty='true' data-bv-notempty-message='供应商不能为空'>
+				</div>
+			</div>
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>经办人:</label>
+				<div class='col-md-3'>
+					<input class='form-control' placeholder='经办人' type='text' name='username' id='username'
+						   data-bv-notempty='true' data-bv-notempty-message='经办人不能为空'>
+				</div>
+			</div>
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>生产日期:</label>
+				<div class='col-md-3'>
+					<input class='form-control' placeholder='生产日期' type='text' name='manuDate' id='manuDate'
+						   data-bv-notempty='true' data-bv-notempty-message='生产日期不能为空'>
+				</div>
+			</div>
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>数量:</label>
+				<div class='col-md-3'>
+					<input class='form-control' placeholder='数量' type='text' name='purchaseNumber' id='purchaseNumber'
+						   data-bv-notempty='true' data-bv-notempty-message='数量'>
+				</div>
+			</div>
+
+			<!--<div class='form-group'>
+				<label class='col-md-2 control-label'></label>
+				<div class='col-md-10'>
+                    <textarea class='form-control' rows="10" placeholder='填入基地信息' type='text' name='remark'
+							  id='remark'></textarea>
+				</div>
+			</div>-->
+
+
+
+
+			<div class="form-actions">
+				<div class="row" align="center" style="margin-top: 20px;">
+					<div class="col-md-4">
+						<button class="btn btn-primary" onclick="javascript:history.back(-1)">返回</button>
+						<button class="btn btn-primary" type="submit" onclick="addInputsStockInfo()">
+							<i class="fa fa-save"></i> 保存
+						</button>
+					</div>
+				</div>
+			</div>
+
+		</fieldset>
+	</form>
+</div>
+</div>
+<!--<script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>-->
+<script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../../js/jq.js"></script>
+<script type="text/javascript" src="../../js/plugin/bootstrapvalidator/bootstrapValidator.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/my/roles/role.js"></script>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../js/dict.js"></script>
+<script type="text/javascript">
+
+
+	layui.use(['layer', 'laydate'], function () {
+		var layer = layui.layer;
+		var laydate = layui.laydate;
+		laydate.render({
+			elem: '#manuDate'
+		});
+	});
+
+
+	$(function() {// 初始化内容
+
+		initActInfo();
+	});
+
+	function initActInfo(){
+		$.ajax({
+			type: 'get',
+			url: '/inputsStock/getStockInfo',
+			async: false,
+			success: function (data) {
+				console.info(data);
+				var html="";
+				if(data.inputsTypeList.length>0){
+					html +="<option value=''>请选择投入品</option>";
+					for(var i = 0 ; i < data.inputsTypeList.length ; i++){
+						html +="<option value='"+data.inputsTypeList[i].inputsId+"'>"+data.inputsTypeList[i].inputsName+"</option>";
+					}
+				}else{
+					html +="<option value=''>暂无投入品</option>";
+				}
+				$("#inputsId").html("");
+				$("#inputsId").html(html);
+			}
+		});
+	}
+
+	function getFactoryInfo(){
+		$.ajax({
+			type: 'get',
+			url: '/inputsStock/getFactoryInfo/'+$("#inputsId").val(),
+			async: false,
+			success: function (data) {
+				console.info(data);
+				var html="";
+				if(data.inputsFactoryList.length>0){
+					html +="<option value=''>请选择生产厂家</option>";
+					for(var i = 0 ; i < data.inputsFactoryList.length ; i++){
+						html +="<option value='"+data.inputsFactoryList[i].id+"'>"+data.inputsFactoryList[i].factoryName+"</option>";
+					}
+				}else{
+					html +="<option value=''>暂无生产厂家</option>";
+				}
+				$("#manufactor").html("");
+				$("#manufactor").html(html);
+			}
+		});
+	}
+
+
+
+
+	function addInputsStockInfo(){
+
+		var formdata = $("#form").serializeObject();
+
+		if($("#inputsId").val()==""){
+			layer.alert('请选择投入品名称');
+			return;
+		}
+
+		if($("#manufactor").val()==""){
+			layer.alert('请选择生产厂商');
+			return;
+		}
+
+		var dateAry = new FormData();
+		dateAry.append("inputsId",$("#inputsId").val());
+		dateAry.append("manufactor",$("#manufactor").val());
+		dateAry.append("supplier",formdata.supplier);
+		dateAry.append("manuDate",formdata.manuDate);
+		dateAry.append("purchaseNumber",formdata.purchaseNumber);
+		dateAry.append("username",formdata.username);
+
+		$.ajax({
+			type: 'post',
+			url: '/inputsStock/addInputsStock',
+			contentType:false,
+			processData: false,
+			data: dateAry,
+			success: function (data) {
+				layer.msg("添加成功", {shift: -1, time: 2000}, function(){
+					location.href = "InputStock.html";
+				});
+			},
+			error:function (){}
+		});
+	}
+
+
+</script>
+
+
+</body>
+</html>

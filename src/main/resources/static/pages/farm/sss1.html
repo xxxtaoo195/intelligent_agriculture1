@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Animating Symbols</title>
+    <style>
+        html, body, #map-canvas {
+            height: 100%;
+            margin: 0px;
+            padding: 0px
+        }
+    </style>
+    <script async defer src="http://maps.google.cn/maps/api/js?key=AIzaSyCHH26wp9a4hcTYYjTtAzsuBDZYgOyYzQo&amp;libraries=places&amp;callback=initialize"></script>
+    <script>
+
+        var line;
+
+        function initialize() {
+            var mapOptions = {
+                center: new google.maps.LatLng(27.0277705258, 112.3976439485),
+                zoom: 6,
+                mapTypeId: google.maps.MapTypeId.TERRAIN
+            };
+
+            var map = new google.maps.Map(document.getElementById('map-canvas'),
+                mapOptions);
+
+            //此处传入一个坐标的数组
+            //图标在连接这两点的线上移动
+            var lineCoordinates = [
+                new google.maps.LatLng(27.0277705258, 112.3976439485),
+                new google.maps.LatLng(27.0268912690, 112.3970002183),
+                new google.maps.LatLng(27.0266045533, 112.3982018480),
+                new google.maps.LatLng(27.0273691268, 112.3986953744),
+
+            ];
+
+            var lineSymbol = {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 8,
+                strokeColor: '#393'
+            };
+
+
+            line = new google.maps.Polyline({
+                path: lineCoordinates,
+                icons: [{
+                    icon: lineSymbol,
+                    offset: '100%'
+                }],
+                map: map
+            });
+
+            animateCircle();
+        }
+
+        function animateCircle() {
+            var count = 0;
+            window.setInterval(function() {
+                count = (count + 1) % 200;
+
+                var icons = line.get('icons');
+                icons[0].offset = (count / 2) + '%';
+                line.set('icons', icons);
+            }, 50);
+        }
+
+
+    </script>
+</head>
+<body>
+<div id="map-canvas"></div>
+</body>
+</html>

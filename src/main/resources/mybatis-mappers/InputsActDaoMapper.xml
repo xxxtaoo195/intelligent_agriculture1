@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.topwulian.dao.InputsActDao">
+
+	<sql id="where">
+		<where>
+			<if test="params.id != null and params.id != ''">
+				and id = #{params.id}
+			</if>
+			<if test="params.deviceId != null and params.deviceId != ''">
+				and deviceId = #{params.deviceId}
+			</if>
+		</where>
+	</sql>
+
+
+	<select id="count" resultType="int">
+		select count(*) from t_inputs_act a
+		inner join t_inputs_type t on a.inputsId = t.inputsId
+		inner join t_inputs_factory f on a.fid = f.id
+<!--		<if test="params != null">
+			<include refid="where" />
+		</if>-->
+	</select>
+
+	<select id="list" resultType="com.topwulian.model.InputsAct">
+		select a.*,t.inputsName,t.inputsType,f.factoryName  from t_inputs_act a
+		inner join t_inputs_type t on a.inputsId = t.inputsId
+		inner join t_inputs_factory f on a.fid = f.id
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+
+
+	<select id="actcount" resultType="int">
+		select count(1) from t_inputs_batch t
+		<!--		<if test="params != null">
+                    <include refid="where" />
+                </if>-->
+	</select>
+
+	<select id="actlist" resultType="com.topwulian.model.InputsAct">
+		select  b.batchId, a.purchaseDate ,a.inputsType,a.purchaseNumber as purNum , a.remainNumber ,a.manufactor,a.supplier,a.manuDate,a.qualityMonth,a.username from t_inputs_batch b
+		inner join (
+		SELECT a.*,t.inputsName,s.batchId,s.purchaseNumber,s.purchaseDate,s.remainNumber FROM t_inputs_act a
+		inner join t_inputs_type t on a.inputsId = t.id
+		inner join t_inputs_stock s on a.id = s.inputActId
+		) a on b.batchId = a.batchId
+		<where>
+			<if test="params.batchId != null and params.batchId != ''">
+				and b.batchId =  #{params.id}
+			</if>
+		</where>
+
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="getByBatchIdInfo" resultType="com.topwulian.model.InputsAct">
+		select b.*,s.inputsName,s.isToxicity,s.qualityMonth,s.inputsUnit,s.inputsType, f.factoryName from (
+		select * from t_inputs_batch where batchId = #{batchId}
+		) b
+		inner join (
+		SELECT a.*,t.inputsName,t.inputsType FROM t_inputs_act a inner join t_inputs_type t on a.inputsId = t.inputsId
+		) s on b.inputsId =  s.inputsId
+		inner join t_inputs_factory f on b.fid = f.id
+	</select>
+
+	<select id="getActInfoList" resultType="com.topwulian.model.InputsAct">
+		select a.*,f.factoryName,f.factoryLicense,t.inputsName,t.inputsType from t_inputs_act a
+		inner join t_inputs_factory f on a.fid = f.id
+		inner join t_inputs_type t on a.inputsId = t.inputsId
+		where 1=1
+	</select>
+
+
+</mapper>

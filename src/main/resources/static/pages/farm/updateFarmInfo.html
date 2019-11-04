@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="../../js/city-picker/city-picker.css">
+    <link rel="stylesheet" href="../../css/layui" media="all"/>
+
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all"/>
+    <script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>
+    <script src="../../js/city-picker/city-picker.data.js"></script>
+    <script src="../../js/city-picker/city-picker.js"></script>
+
+    <script src="../../layui/layui.all.js"></script>
+
+    <script src="../../layuiadmin/layui/layui.all.js"></script>
+
+
+
+    <link rel="stylesheet" type="text/css"  href="../../css/mytable.css">
+</head>
+<body>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <form class="form-horizontal main-form" onsubmit="return false" id="form">
+        <fieldset>
+            <input type="hidden" id="id" name="id">
+
+            <div class='form-group'>
+                <label class='col-md-1 control-label'>基地名称</label>
+                <div class='col-md-3'>
+                    <input class='form-control' placeholder='基地名称' type='text' name='name' id='name'
+                           data-bv-notempty='true' data-bv-notempty-message='name 不能为空'>
+                </div>
+            </div>
+
+            <div class='form-group'>
+                <label class='col-md-1 control-label'>基地类型</label>
+                <div class='col-md-1'>
+                    <select name="modules" lay-verify="required" lay-search="" style="width: 100%" class='form-control'  name='type' id='type'>
+                        <option value="">  请选择  </option>
+                        <option value="茶园">茶园</option>
+                        <option value="农庄">农庄</option>
+                        <option value="农家乐">农家乐</option>
+                        <option value="鱼塘">鱼塘</option>
+                        <option value="种植基地">种植基地</option>
+                    </select>
+                </div>
+
+                <label class='col-md-1 control-label' style="margin-left: -1%">产品认证</label>
+                <div class='col-md-1' style="margin-left: 1%">
+                    <select name="modules" lay-verify="required" lay-search="" style="width: 100%" class='form-control' name='plantstd' id='plantstd'>
+                        <option value="">  请选择  </option>
+                        <option value="绿色农产">绿色农产</option>
+                        <option value="有机农产">有机农产</option>
+                        <option value="无公害农产">无公害农产</option>
+                    </select>
+                </div>
+
+               <!-- <span class="layui-btn abs-addproto" ><i class="layui-icon">&#xe608;</i>添加</span>-->
+            </div>
+
+            <div class='form-group'>
+                <label class='col-md-1 control-label'>基地位置</label>
+                <div style="position: relative;" class='col-md-3'><!-- container -->
+                    <input id="update-city" class='form-control' size="52" name="position" readonly type="text">
+                </div>
+            </div>
+
+            <div class='form-group'>
+                <label class='col-md-1 control-label'>基地负责人</label>
+                <div class='col-md-3'>
+                    <input class='form-control' placeholder='基地负责人' type='text' name='linkman' id='linkman'
+                           data-bv-notempty='true' data-bv-notempty-message='linkman 不能为空'>
+                </div>
+            </div>
+            <div class='form-group'>
+                <label class='col-md-1 control-label'>联系电话</label>
+                <div class='col-md-3'>
+                    <input class='form-control' placeholder='手机号' type='text' name='telephone' id='telephone'
+                           data-bv-notempty='true' data-bv-notempty-message='telephone 不能为空'>
+                </div>
+            </div>
+            <div class='form-group'>
+                <label class='col-md-1 control-label'>主要产品</label>
+                <div class='col-md-3'main-form>
+                    <input class='form-control' placeholder='填入主要农作物' type='text' name='mainCrop' id='mainCrop'
+                           data-bv-notempty='true' data-bv-notempty-message='主要农作物不能为空'>
+                </div>
+            </div>
+            <!--<div class='form-group'>
+                <label class='col-md-1 control-label'>面积</label>
+                <div class='col-md-3'>
+                    <input class='form-control' placeholder='填入面积' type='number' name='area' id='area'
+                           data-bv-notempty='true' data-bv-notempty-message='面积不能为空'>
+                </div>
+            </div>-->
+            <div class='form-group'>
+                <label class='col-md-1 control-label'>企业资质</label>
+                <div class='col-md-4'>
+                    <div class="layui-input-block" style="width:80%">
+                        <div class="file-box" style="background-color: #FFF; width:93%;margin-left: -26%;" id="imgurl">
+                        </div>
+                    </div>
+                    <input class="hidden abs-input" type="file" value="" name="input_file" id = "input_file" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" onchange="imgPreview(this)" >
+                    <span class="layui-btn abs-addproto" ><i class="layui-icon">&#xe608;</i>添加</span>
+                </div>
+            </div>
+
+            <div class='form-group'>
+                <label class='col-md-1 control-label'>基地介绍</label>
+                <div class='col-md-3'>
+                    <textarea class='form-control' rows="5" placeholder='填入基地信息' type='text' name='remark'
+                              id='remark'></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <div class="row" align="center" style="margin-top: 20px;">
+                    <div class="col-md-4">
+                        <button class="btn btn-primary" onclick="javascript:history.back(-1)">返回</button>
+                        <button class="btn btn-primary" type="submit" onclick="updateFarmInfo()">
+                            <i class="fa fa-save"></i> 保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+</div>
+<!--<script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>-->
+<script type="text/javascript" src="../../js/jq.js"></script>
+<script type="text/javascript" src="../../js/plugin/bootstrapvalidator/bootstrapValidator.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../js/mytable.js"></script>
+<script type="text/javascript" src="../../layui/lay/modules/layer.js"></script>
+<script type="text/javascript">
+    //初始化city-picker省市区三级联动
+    $("#update-city").citypicker();
+    var createTime;
+    layui.use(['layer', 'laydate'], function () {
+        var layer = layui.layer;
+    });
+
+    initData();
+
+    function initData() {
+        $("#update-city").citypicker("reset");
+        $("#update-city").citypicker("destroy");
+
+        $.ajax({
+            type: 'get',
+            url: '/farms/updateinfo',
+            async: false,
+            success: function (data) {
+                //  console.log(data)
+                //let hh = `<span class="placeholder">${data.province}/${data.city}/${data.district}</span>`;
+                //获得指定值
+                // $('.city-picker-span').children().eq(0).html(hh);
+
+                console.info(data);
+
+                $("#update-city").citypicker({
+                    province: data.province,
+                    city: data.city,
+                    district: data.district
+                });
+
+                $('#id').val(data.id);
+                $('#type').val(data.type);
+                $('#name').val(data.name);
+                $('#linkman').val(data.linkman);
+                $('#telephone').val(data.telephone);
+                $('#mainCrop').val(data.mainCrop);
+                $('#area').val(data.area);
+                $('#remark').val(data.remark);
+                createTime = data.createTime;
+
+
+                if(window.FileReader) {
+                    var reader = new FileReader();
+                } else {
+                    alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
+                }
+
+                var imgAry = [];
+                imgAry = data.listFarmEntQua;
+
+                for(var i = 0 ; i< imgAry.length ; i++){
+                    var img ='<img class="myappendimg" src="'+imgAry[i].imgURL+'" />' ;
+                    $('.file-box').append(img)
+                }
+
+
+
+
+                /*  $('#createTime').val(data.createTime);
+                  $('#updateTime').val(data.updateTime);*/
+
+
+            }
+        });
+    }
+
+
+
+    function updateFarmInfo() {
+        $('#form').bootstrapValidator();
+        var bootstrapValidator = $("#form").data('bootstrapValidator');
+        bootstrapValidator.validate();
+        if (!bootstrapValidator.isValid()) {
+            return;
+        }
+
+        var formdata = $("#form").serializeObject();
+
+        var area1 = formdata.position;
+        //得到citypicker格式的省市区信息  安徽省/芜湖市/鸠江区
+        //去判断拿修改的还是默认的值
+        // if (str=='//'||str.length==2){
+        var area = area1.split("/");
+        formdata.province = area[0];
+        formdata.city = area[1];
+        if (area.length > 2) {
+            formdata.district = area[2];
+        }
+
+
+        formdata.createTime = createTime;
+
+
+        console.info(formdata);
+
+
+        var dateAry = new FormData();
+        dateAry.append("area",formdata.area);
+        dateAry.append("city",formdata.city);
+        dateAry.append("createTime",formdata.createTime);
+        dateAry.append("district",formdata.district);
+        dateAry.append("id",formdata.id);
+        dateAry.append("linkman",formdata.linkman);
+        dateAry.append("mainCrop",formdata.mainCrop);
+        dateAry.append("name",formdata.name);
+        dateAry.append("position",formdata.position);
+        dateAry.append("province",formdata.province);
+        dateAry.append("remark",formdata.remark);
+        dateAry.append("telephone",formdata.telephone);
+        dateAry.append("type",formdata.type);
+        dateAry.append("plantstd",formdata.plantstd);
+
+
+
+        for(var i = 0 ; i<fileAry.length; i++){
+            dateAry.append("img",fileAry[i].files[0]);
+        }
+
+        $.ajax({
+            type: 'post',
+            url: '/farms/updateFarmInfo',
+            contentType:false,
+            processData: false,
+            data: dateAry,
+            success: function (data) {
+                layer.msg("修改成功", {shift: -1, time: 1000}, function () {
+
+                });
+            },
+            error:function (){}
+        });
+    }
+
+
+</script>
+
+
+<script type="text/javascript">
+
+
+    var fileAry = [];
+
+    $(function(){
+        $('.abs-addproto').click(function(){
+            $('.abs-input').click()
+        })
+        $('.file-box').on('dblclick','.myappendimg',function(){
+            console.log(123)
+            $(this).remove()
+        })
+    })
+
+    function imgPreview(fileDom) {
+
+
+        console.log(2);
+        //判断是否支持FileReader
+        if(window.FileReader) {
+            var reader = new FileReader();
+        } else {
+            alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
+        }
+
+        //获取文件
+        var file = fileDom.files[0];
+        fileAry.push(fileDom);
+        var imageType = /^image\//;
+        //是否是图片
+        if(!imageType.test(file.type)) {
+            alert("请选择图片！");
+            return;
+        }
+        //读取完成
+        reader.onload = function(e) {
+            //图片路径设置为读取的图片
+            // img.src = e.target.result;
+            //console.log(e.target.result)
+            var img ='<img class="myappendimg" src="'+e.target.result+'" />' ;
+            $('.file-box').append(img)
+        };
+        reader.readAsDataURL(file);
+    }
+</script>
+</body>
+</html>

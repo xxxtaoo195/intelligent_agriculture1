@@ -1,0 +1,91 @@
+@charset "utf-8";
+/* CSS Document */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr, acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong, sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption, tbody,tfoot,thead,tr,th,td{border:0;outline:0;vertical-align:baseline; background:transparent;margin:0;padding:0;}
+body{line-height:1;}
+ol,ul{list-style:none;}
+blockquote,q{quotes:none;}
+blockquote:before,blockquote:after,q:before,q:after{content:none;}
+:focus{outline:0;}
+ins{text-decoration:none;}
+del{text-decoration:line-through;}
+table{border-collapse:collapse;border-spacing:0;}
+
+.shadow:hover{
+	box-shadow: 0 0 10px #b4b4b4; 
+	transition:0.2s;
+	cursor:pointer;
+}
+.airTemperature{
+	/*width: 180px;*/
+	height: 210px;
+	border: 1px solid #ebebeb;
+	position:relative;
+}
+.airTemperature > img{
+	margin: 16px 0 0 20px;
+}
+/*.airTemperature > span{
+	font-size: 10px;
+	color: #3cd696;
+	position:absolute;
+	right: 20px;
+	top: 22px;
+}*/
+.airTemperature_img{
+	margin-top: 25%;
+	height: 90%;
+	width: 90%;
+}
+.airTemperature_img_env{
+
+}
+
+
+.airTemperature_min{
+	font-size: 16px;
+	color: #3cd696;
+	position:absolute;
+	right: 20px;
+	margin-top: 24px;
+}
+
+.airTemperature-xs8{
+	width:12.5%;
+	float: left;
+	position:relative;
+	display:block;
+	box-sizing:border-box
+}
+
+.airTemperature_con{
+	font-size: 16px;
+	color: #3cd696;
+	margin-top: 5px;
+	float: left;
+
+}
+.airTemperature_data{
+	font-size: 36px;
+	margin-top: -20px;
+}
+.airTemperature_data > span{
+	font-family: "微软雅黑";
+	font-size: 16px;
+	position:absolute;
+}
+
+.br{
+	width: 135px;
+	height: 1px;
+	background-color: #ededed;
+	margin: 0 auto;
+	margin-top: 30px;
+}
+.airTemperature_name{
+	font-size: 16px;
+	color: #545454;
+	text-align:center;
+	margin-top: 23px;
+	font-weight: bold;
+	letter-spacing:2px;
+}

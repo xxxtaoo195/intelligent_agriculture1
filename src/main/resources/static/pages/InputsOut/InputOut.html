@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../layui/css/layui.css">
+</head>
+<body>
+<div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top: 20px;">
+        <header style="height: 100%">
+            <div align="left">
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            <form class="form-inline" onsubmit="return false">
+                                <div class="form-group">
+
+                                    批次号：
+                                    <input id="batchId" type="text" class="form-control" placeholder="批次号">
+                                    投入品名称：
+                                    <input id="inputsName" type="text" class="form-control" placeholder="投入品名称">
+                                    投入品类型：
+                                    <select class="form-control input-sm" id="inputsType">
+                                        <option value="">请选择投入品类型</option>
+                                        <option value="1">农药</option>
+                                        <option value="2">种子</option>
+                                        <option value="3">肥料</option>
+                                        <option value="4">兽药</option>
+                                        <option value="5">饲料</option>
+                                    </select>
+
+                                    <button id="searchBt" class="layui-btn layui-btn-sm" style="background-color: #FA6200" permission="notice:query"><i class="layui-icon">&#xe615;</i>搜索</button>
+                                </div>
+                            </form>
+                        </td>
+                        <td align="right">
+                            <!--<a href="../InputsStock/addInputsOut.html" class="layui-btn layui-btn-normal layui-btn-sm" >出库登记</a>-->
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </header>
+
+        <div>
+            <div class="widget-body no-padding">
+                <table id="dt-table" class="table table-striped table-bordered table-hover" style="width:100%">
+                    <thead>
+                    <tr>
+                    </tr>
+                    <tr>
+                        <th style="width: 10%">批次号</th>
+                        <th>投入品名称</th>
+                        <th>投入品种类</th>
+                        <th>使用面积</th>
+                        <th>地块</th>
+                        <th style="width: 10%">出库数量</th>
+                        <th>出库时间</th>
+                        <th>经办人</th>
+                        <th>使用说明</th>
+                        <th>出库原因</th>
+                        <!--<th>操作</th>-->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../../js/jq.js"></script>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../js/plugin/datatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../../js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="../../js/my/permission.js"></script>
+<script type="text/javascript" src="../../js/dict.js"></script>
+
+<script type="text/javascript">
+
+
+    $(document).ready(function(){
+        init();
+    });
+
+
+
+    layui.config({
+        base: '../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'console'],function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,element = layui.element
+            ,form = layui.form;
+
+
+    });
+
+    var noticeStatus = showDictSelect("status", "noticeStatus", true);
+
+    var example;
+    function init(){
+        example =
+            $('#dt-table').DataTable({
+                "searching": false,
+                "processing": false,
+                "serverSide" : true,
+                "language": {
+                    "url": "/js/plugin/datatables/Chinese.lang"
+                },
+                "ajax": {
+                    "url" : "/inputsOut",
+                    "type":"get",
+                    "data":function(d){
+                        d.batchId = $('#batchId').val();
+                        d.inputsName = $('#inputsName').val();
+                        d.inputsType = $('#inputsType').val();
+                    },
+                    "error":function(xhr, textStatus, errorThrown){
+                        var msg = xhr.responseText;
+                    }
+                },
+                "dom": "<'dt-toolbar'r>t<'dt-toolbar-footer'<'col-sm-10 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-10' p v>>",
+                "columns": [
+
+
+                    { "data": "batchId", "defaultContent": ""},
+                    { "data": "inputsName", "defaultContent": ""},
+                    { "data": "inputsType", "defaultContent": "",
+                        "render": function (data, type, row) {
+                            var dataStr = data;
+                            if(data=='1'){
+                                dataStr = "农药";
+                            }else if(data=='2'){
+                                dataStr = "种子";
+                            }else if(data=='3'){
+                                dataStr = "肥料";
+                            }else if(data=='4'){
+                                dataStr = "兽药";
+                            }else if(data=='5'){
+                                dataStr = "饲料";
+                            }
+                            return dataStr;
+                        }},
+                    { "data": "makeArea", "defaultContent": ""},
+                    { "data": "makeMassif", "defaultContent": ""},
+                    { "data": "outStockNumber", "defaultContent": ""},
+                    { "data": "outStockDate", "defaultContent": "",
+                        "render": function (data, type, row) {
+                            return data.substring(0,10);
+                        }},
+                    { "data": "username", "defaultContent": ""},
+                    { "data": "makeMethod", "defaultContent": ""},
+                    { "data": "remarks", "defaultContent": ""},
+/*                    {
+                        "data": "status",
+                        "defaultContent": "",
+                        "render": function (data, type, row) {
+                            return noticeStatus[data];
+                        }
+                    },*/
+                    /*{
+                        "data": "",
+                        "defaultContent": "",
+                        "orderable":false,
+                        "render": function (data, type, row) {
+                            var id  = data.id;
+
+                            var detail = '<button class="layui-btn layui-btn-xs" style="background-color:#3C6FD6;" title="编辑" onclick="getStockDetail('+"'"+id+"'"+')">入库详情</button>';
+                            return detail;
+                        }
+                    },*/
+                ],
+                "order": [[ 2, "desc" ],[1, "desc"]]
+            } );
+    }
+
+
+
+    $("#searchBt").click(function(){
+        example.ajax.reload();
+    });
+
+    //查看详情
+    function getStockDetail(){
+
+    }
+
+
+
+
+
+</script>

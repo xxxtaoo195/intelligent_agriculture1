@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.topwulian.dao.DeviceThresholdDao">
+
+	<sql id="where">
+		<where>
+
+		</where>
+	</sql>
+
+	<select id="count" resultType="int">
+		select count(*) from t_device_threshold_info t
+		inner join t_device d on t.deviceId = d.id
+		inner join t_monpoints m on t.mid = m.id
+		where d.farmId = #{params.farmId} and d.userId = #{params.userId}
+		<if test="params.deviceName != null and params.deviceName != ''">
+			and d.`name` like concat(concat('%',#{params.deviceName}),'%')
+		</if>
+
+		<if test="params.monpointsName != null and params.monpointsName != ''">
+			and m.monpointsName like concat(concat('%',#{params.monpointsName}),'%')
+		</if>
+
+		<if test="params.dth_status != null and params.dth_status != ''">
+			and t.`status` = #{params.dth_status}
+		</if>
+
+
+	</select>
+
+	<select id="list" resultType="com.topwulian.model.DeviceThreshold">
+		select t.*,d.name,m.monpointsName from t_device_threshold_info t
+		inner join t_device d on t.deviceId = d.id
+		inner join t_monpoints m on t.mid = m.id
+		where d.farmId = #{params.farmId} and d.userId = #{params.userId}
+
+		<if test="params.deviceName != null and params.deviceName != ''">
+			and d.`name` like lower(concat('%',#{params.deviceName},'%'))
+		</if>
+
+		<if test="params.monpointsName != null and params.monpointsName != ''">
+			and m.monpointsName like lower(concat('%',#{params.monpointsName},'%'))
+		</if>
+
+		<if test="params.dth_status != null and params.dth_status != ''">
+			and t.`status` = #{params.dth_status}
+		</if>
+
+		ORDER BY `status`,remindDate desc
+		limit #{offset}, #{limit}
+	</select>
+
+	<select id="listThresholdInfo" resultType="com.topwulian.model.DeviceThreshold">
+		select * from (
+		select t.*,d.name,m.monpointsName from t_device_threshold_info t
+		inner join t_device d on t.deviceId = d.id
+		inner join t_monpoints m on t.mid = m.id
+		where t.status = '1' and d.farmId = #{farmId} and d.userId = #{userId}
+		ORDER BY t.remindDate desc
+		) t GROUP BY t.deviceId
+		LIMIT 0,8
+	</select>
+
+
+
+</mapper>

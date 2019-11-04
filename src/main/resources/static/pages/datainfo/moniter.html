@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>智能环境监测-首页</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/template.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/layui/font/font_2wmcsfamra2/iconfont.css">
+    <link rel="stylesheet" href="" id='bugcss'>
+
+    <link rel="stylesheet" href="../../css/index.css" id='indexcss'>
+
+    <script type="text/javascript">
+        document.querySelector('#bugcss').href = '../../layuiadmin/style/bug.css?v=1.0&code=' + new Date();
+    </script>
+
+    <script src="../../js/echarts.js"></script>
+    <style>
+        .cardSelected {
+            background-color: #dddddd;
+        }
+
+        .layuiadmin-card-text {
+            background-color: #efefef;
+            color: #777;
+            padding: 24px;
+        }
+
+        .airTemperature_data{
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .airTemperature_data > span{
+            font-family: "微软雅黑";
+            font-size: 16px;
+            position:absolute;
+        }
+    </style>
+</head>
+<body ng-app="ia" ng-controller="envMoniterController" ng-init="getFarmInfo();getRealDataChart()">
+
+<div class="layui-fluid myfarm3">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-row layui-col-space15" id="data_info">
+                <div class="layui-col-md12" id="echartsbug">
+                    <div class="layui-card">
+                        <div class="layui-card-header">监测趋势图</div>
+
+                        <form name="form" class="layui-form" action="" lay-filter="component-form-element"
+                              ng-click="changeTime()">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">趋势图：</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="timeUnit" value="MONTH" title="月">
+                                    <input type="radio" name="timeUnit" value="DAY" title="天">
+                                    <input type="radio" name="timeUnit" value="HOUR" title="时" checked>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">监测点：</label>
+                            <div class="layui-input-block">
+                                <select name="modules" lay-verify="required" lay-search="" style="width: 20%" class='form-control' name='mid' id='mid' >
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">设备：</label>
+                            <div class="layui-input-block">
+                                <select name="modules" lay-verify="required" lay-search="" style="width: 20%" class='form-control' name='deviceId' id='deviceId' ng-click="changeTime()" >
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-card-body">
+                            <div class="layui-carousel layadmin-carousel my-height1 layadmin-dataview" data-anim="fade"
+                                 lay-filter="LAY-index-dataview">
+                                <div carousel-item id="realDataView1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<script src="../../layuiadmin/layui/layui.js?t=1"></script>
+<script src="../../js/angularjs/angular.min.js"></script>
+<script src="../../js/jquery-2.1.1.min.js"></script>
+
+<script>
+    layui.config({
+        base: '../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'console']);
+
+
+    //这样就能在这里使用jquery了
+    layui.use('layer', function () {
+        var $ = layui.$
+            , layer = layui.layer;
+
+    });
+
+    var app = angular.module('ia', []);//envMoniterController
+    app.controller('envMoniterController', function ($scope, $http, $location) {
+        //使用anguljs双向绑定
+        $scope.layuiCssClass = ['layui-icon-console', 'layui-icon-chart', 'layui-icon-template-1', 'layui-icon-find-fill', 'layui-icon-survey', 'layui-icon-user', 'layui-icon-set', 'layui-icon-about', 'layui-icon-camera-fill', 'layui-icon-website', 'layui-icon-about'];
+
+        $scope.currentTime = new Date();
+        //设备状态: 0 在线    1 离线
+        $scope.state = ['在线', '离线'];
+        //当前基地页面全部信息
+        $scope.getFarmInfo = function (farmId) {
+            $http.get('/dataInfo/data').then(function(response) {
+                //监测点
+                $scope.monpointsList = response.data.monpointsList;
+                if($scope.monpointsList.length>0){
+                    var htmlStrInfo = "<option value=\"\">请选择监测点</option>";
+                    for(var i = 0 ; i < $scope.monpointsList.length ; i++){
+                        if($scope.monpointsList[i].monpointstype=='1'){
+                            htmlStrInfo +="<option value='"+$scope.monpointsList[i].id+"'>"+$scope.monpointsList[i].monpointsName+"</option>";
+                        }
+                    }
+                    $('#mid').html(htmlStrInfo);
+                }else{
+                    var htmlStrInfo = "<option value=''>暂无监测点</option>";
+                    $('#mid').html(htmlStrInfo);
+                }
+            });
+        }
+
+
+
+        //按年,月,日分别进行显示
+        $scope.changeTime = function () {
+            $scope.timeUnit = document.form.timeUnit.value;
+
+            deviceDateShow($scope.timeUnit);
+        }
+
+
+        $scope.getRealDataChart = function (timeUnit) {
+
+            /*$http.get('../../dataInfo/echartsShow?timeUnit=' + timeUnit + '&deviceId='+$("#deviceId").val()+'&device_info='+$("#device_info").val()).then(function (response) {
+                console.info(response);
+                //将折线图的默认数据清空
+                /!*option.xAxis.data = [];
+                angular.forEach(option.series, function (data, index) {
+                    option.series[index].data = [];
+                });
+                option.legend.data = [];
+                $scope.responseData = response.data;
+                var i = 0;
+                angular.forEach(response.data, function (deviceDataList, indexI) {
+                        angular.forEach(deviceDataList, function (deviceData, indexJ) {
+                            //console.log(deviceData)
+                            //x轴只需要赋值一次echart
+                            if (i === 0) {
+                                option.xAxis.data.push(deviceData.hour);
+                                option.legend.data.push(realTimeData.measureUnitType);
+                            }
+                            option.series[i].name = realTimeData.measureUnitType;
+                            option.series[i].type = "line";
+                            option.series[i].stack = "总量";
+                            option.series[i].data.push(deviceData.avg);
+
+                        });
+                    i++;
+                    if (i > deviceDataList.length) {
+                        return;
+                    }
+                })
+                realDataViewChart.setOption(option);*!/
+            })*/
+        }
+
+
+        //可以单选实时数据,并高亮显示,将折线图同步进行变化
+        $scope.selectData = function (realTimeData) {
+
+            console.info(realTimeData);
+
+            $scope.realTimeData = realTimeData;
+
+            //将折线图的默认数据清空
+            option.xAxis.data = [];
+            angular.forEach(option.series, function (data, index) {
+                option.series[index].data = [];
+            });
+            option.legend.data = [];
+
+            var i = 0;
+
+            console.info(option);
+
+            angular.forEach($scope.responseData, function (deviceDataList, indexI) {
+                angular.forEach(deviceDataList, function (deviceData, indexJ) {
+                    if (i === 0) {
+                        option.xAxis.data.push(deviceData.hour);
+                        option.legend.data.push(realTimeData.measureUnitType);
+                    }
+                    if (realTimeData.deviceId == deviceData.deviceId) {
+                        console.info("deviceData.avg");
+                        console.info(deviceData.avg);
+                        option.series[i].name = realTimeData.measureUnitType;
+                        option.series[i].type = "line";
+                        option.series[i].stack = "总量";
+
+                        option.series[i].data.push(deviceData.avg);
+                        return;
+                    }
+                });
+                i++;
+                if (i > deviceDataList.length) {
+                    return;
+                }
+            });
+            realDataViewChart.setOption(option);
+        }
+
+        $("#mid").change(function(){
+            getDeviceInfo($("#mid").val());
+        });
+
+
+        function getDeviceInfo(monpointsid){
+            var data = new FormData();
+            data.append("monpointsid",monpointsid);
+            $.ajax({
+                type: 'post',
+                url: '/dataInfo/getDeviceList',
+                contentType:false,
+                processData: false,
+                data: data,
+                success: function (data) {
+                    //选择设备
+                    var deviceList = data.deviceList;
+                    if(deviceList.length>0){
+                            var htmlStrInfo = "<option value=\"\">请选择设备</option>";
+                            for(var i = 0 ; i < deviceList.length ; i++){
+                                htmlStrInfo +="<option value='"+deviceList[i].id+"'>"+deviceList[i].name+"</option>";
+                            }
+                            $('#deviceId').html(htmlStrInfo);
+
+                    }else{
+                        var htmlStrInfo = "<option value=''>暂无设备</option>";
+                        $('#deviceId').html(htmlStrInfo);
+                    }
+                },
+                error:function (){}
+            });
+        }
+
+        function deviceDateShow(timeUnit){
+
+           var deviceName =  $("#deviceId").find("option:selected").text();
+
+            console.info(deviceName);
+            console.info($("#deviceId").val());
+
+            if($("#deviceId").val()!=""){
+
+                $http.get('../../dataInfo/echartsShow?timeUnit=' + timeUnit + '&deviceId='+$("#deviceId").val()+'&mid='+$("#mid").val()).then(function (response) {
+
+
+                    console.info(response);
+                    //将折线图的默认数据清空
+                    option.xAxis.data = [];
+                    angular.forEach(option.series, function (data, index) {
+                        option.series[index].data = [];
+                    });
+                    option.legend.data = [];
+
+                    var deviceId = $("#deviceId").val();
+
+
+                    var i = 0;
+                    angular.forEach(response.data, function (deviceDataList, indexI) {
+                        angular.forEach(deviceDataList, function (deviceData, indexJ) {
+                            //console.log(deviceData)
+                            //x轴只需要赋值一次echart
+                            if (i === 0) {
+                                option.xAxis.data.push(deviceData.hour);
+                                option.legend.data.push(deviceName);
+                            }
+                            if (deviceId == deviceData.deviceId) {
+                                option.series[i].name = deviceName;
+                                option.series[i].type = "line";
+                                option.series[i].stack = "总量";
+                                option.series[i].data.push(deviceData.avg);
+                                return;
+                            }
+                        });
+                        i++;
+                        if (i > deviceDataList.length) {
+                            return;
+                        }
+                    })
+                    console.info(option);
+                    realDataViewChart.setOption(option);
+                })
+
+            }
+
+        }
+    });
+    
+
+
+
+</script>
+
+<!--折线图-->
+<script type="text/javascript">
+
+    /**
+     * 需要把数组改成活的 ADD
+     * @type {{yAxis: {type: string}, xAxis: {data: string[], type: string, boundaryGap: boolean}, legend: {data: string[], x: string, y: string}, grid: {left: string, bottom: string, right: string, containLabel: boolean}, series: *[], tooltip: {trigger: string}, toolbox: {feature: {saveAsImage: {show: boolean}, magicType: {show: boolean, type: string[]}}}}}
+     */
+    option = {
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['空气温度', '空气湿度', '光照', '土壤温度', '土壤湿度', '电导率', 'PH值', '土壤盐分'],
+            x: 'left',
+            y: 'top'
+        },
+        grid: {
+            left: '3%',
+            right: '5%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                // mark: {show: true},
+                // dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                // restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '空气温度',
+                type: 'line',
+                stack: '总量',
+                data: [120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: '空气湿度',
+                type: 'line',
+                stack: '总量',
+                data: [220, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: '光照',
+                type: 'line',
+                stack: '总量',
+                data: [320, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: '土壤温度',
+                type: 'line',
+                stack: '总量',
+                data: [420, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: '土壤湿度',
+                type: 'line',
+                stack: '总量',
+                data: [520, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210]
+            }
+            ,
+            {
+                name: '电导率',
+                type: 'line',
+                stack: '总量',
+                data: [620, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210]
+            }
+            ,
+            {
+                name: 'PH值',
+                type: 'line',
+                stack: '总量',
+                data: [720, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: '土壤盐分',
+                type: 'line',
+                stack: '总量',
+                data: [720, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210]
+            }
+        ]
+    };
+    // 基于准备好的dom，初始化echarts实例
+    var realDataViewChart = echarts.init(document.getElementById('realDataView1'));
+
+</script>
+</body>
+</html>
+

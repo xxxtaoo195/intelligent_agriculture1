@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" media="screen" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="../../css/dataTables.bootstrap.min.css">
+	<link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+	<link rel="stylesheet" type="text/css" href="../../js/city-picker/city-picker.css">
+	<!--<link rel="stylesheet" href="../../css/layui" media="all"/>-->
+
+	<link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all"/>
+	<script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>
+	<script src="../../js/city-picker/city-picker.data.js"></script>
+	<script src="../../js/city-picker/city-picker.js"></script>
+
+	<script src="../../layui/layui.all.js"></script>
+
+	<script src="../../layuiadmin/layui/layui.all.js"></script>
+
+
+
+	<link rel="stylesheet" type="text/css"  href="../../css/mytable.css">
+
+	<style>
+
+		html { overflow-y: scroll; }
+	</style>
+</head>
+<body>
+<div class="col-md-12">
+	<form class="form-horizontal main-form" onsubmit="return false" id="form">
+		<fieldset>
+			<input type="hidden" id="id" name="id">
+
+			<input type="hidden" id="fid" name="fid">
+
+			<input type="hidden" id="typeId" name="typeId">
+
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>是否存在批次:</label>
+				<div class='col-md-3'>
+					<select name="modules" lay-verify="required" lay-search="" class='form-control'  name='isNotInputs' id='isNotInputs' onchange="getIsNotInputs()" >
+						<option value="">请选择是否存在批次</option>
+						<option value="1">无</option>
+						<option value="2">有</option>
+					</select>
+				</div>
+			</div>
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>批次号:</label>
+				<div class='col-md-3' >
+					<select name="modules" lay-verify="required" lay-search="" class='form-control'  name='batchId' id='batchId' onchange="getInputActInfo()">
+					</select>
+				</div>
+			</div>
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>投入品名称:</label>
+				<div class='col-md-3'>
+					<select name="modules" lay-verify="required" lay-search="" class='form-control'  name='inputsId' id='inputsId' onchange="getInputAct();">
+					</select>
+				</div>
+			</div>
+
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>投入品种类:</label>
+				<div class='col-md-3'>
+					<label class='col-md-12 control-label' style="text-align: left"><span id="inputsType"></span></label>
+				</div>
+			</div>
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>毒性:</label>
+				<div class='col-md-3'>
+					<label class='col-md-12 control-label' style="text-align: left"><span id="isToxicity"></span></label>
+				</div>
+			</div>
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>生产厂家:</label>
+				<div class='col-md-3'>
+					<label class='col-md-12 control-label' style="text-align: left"><span id="manufactor"></span></label>
+				</div>
+			</div>
+			<!--<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>登记证号:</label>
+				<div class='col-md-3'>
+					<label class='col-md-1 control-label'><span id="factoryLicense"></span></label>
+				</div>
+			</div>-->
+
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>保质期:</label>
+				<div class='col-md-3'>
+					<label class='col-md-12 control-label' style="text-align: left"><span id="qualityMonth"></span></label>
+				</div>
+			</div>
+
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>规格:</label>
+				<div class='col-md-3'>
+					<label class='col-md-12 control-label' style="text-align: left"><span id="inputsUnit"></span></label>
+				</div>
+			</div>
+
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>经办人:</label>
+				<div class='col-md-3'>
+					<input class='form-control' placeholder='经办人' type='text' name='username' id='username'
+						   data-bv-notempty='true' data-bv-notempty-message='经办人不能为空'>
+				</div>
+			</div>
+
+			<!--<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>生产日期:</label>
+				<div class='col-md-3'>
+					<input class='form-control' placeholder='生产日期' type='text' name='manuDate' id='manuDate'
+						   data-bv-notempty='true' data-bv-notempty-message='生产日期不能为空'>
+				</div>
+			</div>-->
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>供应商:</label>
+				<div class='col-md-3'>
+					<input class='form-control' placeholder='供应商' type='text' name='supplier' id='supplier'
+						   data-bv-notempty='true' data-bv-notempty-message='数量'>
+				</div>
+			</div>
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>数量:</label>
+				<div class='col-md-3'>
+					<input class='form-control' placeholder='数量' type='text' name='purchaseNumber' id='purchaseNumber'
+						   data-bv-notempty='true' data-bv-notempty-message='数量'>
+				</div>
+			</div>
+
+			<div class='form-group col-md-12'>
+				<label class='col-md-1 control-label'>备注:</label>
+				<div class='col-md-3'>
+                    <textarea class='form-control' rows="5" placeholder='填入异常入库备注' type='text' name='remarks'
+							  id='remarks'></textarea>
+				</div>
+			</div>
+
+
+
+
+			<div class="form-actions">
+				<div class="row" align="center" style="margin-top: 20px;">
+					<div class="col-md-4">
+						<button class="btn btn-primary" onclick="javascript:history.back(-1)">返回</button>
+						<button class="btn btn-primary" type="submit" onclick="addInputsStockInfo()">
+							<i class="fa fa-save"></i> 保存
+						</button>
+					</div>
+				</div>
+			</div>
+
+		</fieldset>
+	</form>
+</div>
+</div>
+<!--<script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>-->
+<script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../../js/jq.js"></script>
+<script type="text/javascript" src="../../js/plugin/bootstrapvalidator/bootstrapValidator.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/my/roles/role.js"></script>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../js/dict.js"></script>
+<script type="text/javascript">
+
+
+	layui.use(['layer', 'laydate'], function () {
+		var layer = layui.layer;
+		var laydate = layui.laydate;
+		laydate.render({
+			elem: '#manuDate'
+		});
+	});
+
+
+	$(function() {// 初始化内容
+		$("#batchId").attr("disabled","disabled");
+	});
+
+
+	var actInfo;
+	function getIsNotInputs(){
+		var type = $("#isNotInputs").val();
+		if(type == 1){
+			$("#batchId").attr("disabled","disabled");
+			$("#inputsId").removeAttr("disabled");
+			$("#batchId").html("");
+			$("#batchId").val("");
+
+			$("#inputsType").html("");
+			$("#isToxicity").html("");
+			$("#manufactor").html("");
+			$("#qualityMonth").html("");
+			$("#inputsUnit").html("");
+
+
+			$.ajax({
+				type: 'get',
+				url: '/inputsErrStock/getInputActInfo',
+				async: false,
+				success: function (data) {
+					console.info(data);
+					actInfo = data;
+					var html="";
+					if(data.length>0){
+						html +="<option value=''>请选择投入品名称</option>";
+						for(var i = 0 ; i < data.length ; i++){
+							html +="<option value='"+data[i].id+"'>"+data[i].inputsName+"</option>";
+						}
+					}else{
+						html +="<option value=''>暂无投入品</option>";
+					}
+					$("#inputsId").html("");
+					$("#inputsId").html(html);
+				}
+			});
+		}else if(type==2){
+			$("#batchId").removeAttr("disabled");
+			$.ajax({
+				type: 'get',
+				url: '/inputsErrStock/getBatchList',
+				async: false,
+				success: function (data) {
+					console.info(data);
+					var html="";
+					if(data.length>0){
+						$("#inputsId").attr("disabled","disabled");//有批次的情况下 自动绑定投入品名称,不能进行选择
+
+						html +="<option value=''>请选择批次号</option>";
+						for(var i = 0 ; i < data.length ; i++){
+							html +="<option value='"+data[i].batchId+"'>"+data[i].batchId+"</option>";
+						}
+
+					}else{
+						html +="<option value=''>暂无批次号</option>";
+					}
+					$("#batchId").html("");
+					$("#batchId").html(html);
+				}
+			});
+		}else{
+			$("#batchId").attr("disabled","disabled");
+			$("#inputsId").attr("disabled","disabled");
+			$("#batchId").val("");
+			$("#inputsId").val("");
+
+		}
+	}
+
+
+	function getInputActInfo(){
+		var batchId =  $("#batchId").val();
+		if(batchId == "") {
+			$("#inputsId").html("");
+			$("#inputsType").html("");
+			$("#isToxicity").html("");
+			$("#qualityMonth").html("");
+			$("#inputsUnit").html("");
+			$("#manufactor").html("");
+		}else{
+			$.ajax({
+				type: 'get',
+				url: '/inputsErrStock/getInputActInfo/' + batchId,
+				async: false,
+				success: function (data) {
+
+					console.info(data);
+
+					$("#inputsId").html("")
+					var inputsId = '<option value=' + data.inputsId + '>' + data.inputsName + '</option>';
+					$("#inputsId").html(inputsId);
+
+					$("#inputsId").val(data.inputsId);
+
+					$("#inputsType").html("");
+					$("#inputsType").html(inputsTypeStr(data.inputsType));
+
+					$("#typeId").val(data.inputsType);
+
+
+					$("#isToxicity").html("");
+					$("#isToxicity").html(data.isToxicity == 1 ? "限用" : "低毒");
+
+					$("#manufactor").html("");
+					$("#manufactor").html(data.factoryName);
+
+					$("#fid").val(data.fid);
+
+					$("#qualityMonth").html("");
+					$("#qualityMonth").html(data.qualityMonth + "个月");
+
+					$("#inputsUnit").html("");
+					$("#inputsUnit").html(data.inputsUnit);
+
+
+				}
+			});
+		}
+	}
+
+	function getInputAct(){
+		var id =  $("#inputsId").val();
+		if(actInfo.length>0){
+			for(var i = 0; i < actInfo.length; i++){
+				if(id == actInfo[i].id){
+					$("#inputsType").html("");
+					$("#inputsType").html(inputsTypeStr(actInfo[i].inputsType));
+
+					$("#typeId").val(actInfo[i].inputsType);
+
+					$("#isToxicity").html("");
+					$("#isToxicity").html(actInfo[i].isToxicity==1?"限用":"低毒");
+
+					$("#manufactor").html("");
+					$("#manufactor").html(actInfo[i].factoryName);
+					$("#fid").val(actInfo[i].fid);
+
+					$("#qualityMonth").html("");
+					$("#qualityMonth").html(actInfo[i].qualityMonth+"个月");
+
+					$("#inputsUnit").html("");
+					$("#inputsUnit").html(actInfo[i].inputsUnit);
+					return;
+				}
+			}
+		}
+	}
+
+	function inputsTypeStr(type){
+		if(type=="1"){
+			return "农药"
+		}else if(type=="2"){
+			return "种子"
+		}else if(type=="3"){
+			return "肥料"
+		}else if(type=="4"){
+			return "兽药"
+		}else if(type=="5"){
+			return "饲料"
+		}
+	}
+
+
+	function addInputsStockInfo(){
+
+		var formdata = $("#form").serializeObject();
+
+		var dateAry = new FormData();
+		dateAry.append("inputsId",$("#inputsId").val());
+		dateAry.append("fid",formdata.fid);
+		dateAry.append("username",formdata.username);
+		/*dateAry.append("manuDate",formdata.manuDate);*/
+		dateAry.append("purchaseNumber",formdata.purchaseNumber);
+		dateAry.append("inputsType",$("#typeId").val());
+		dateAry.append("supplier",formdata.supplier);
+		dateAry.append("remarks",formdata.remarks);
+		dateAry.append("batchId",$("#batchId").val());
+
+
+
+		$.ajax({
+			type: 'post',
+			url: '/inputsErrStock/addInputsErrStock',
+			contentType:false,
+			processData: false,
+			data: dateAry,
+			success: function (data) {
+
+				layer.msg("添加成功", {shift: -1, time: 2000}, function(){
+					location.href = "InputErrStock.html";
+				});
+			},
+			error:function (){}
+		});
+	}
+
+
+</script>
+
+
+</body>
+</html>

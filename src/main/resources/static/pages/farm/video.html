@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <title>Document1</title>
+    <style type='text/css'>
+        * { margin: 0; padding: 0; }
+
+        html, body { height: 100%; }
+
+        .flex { display: flex; }
+
+        .flex-row { flex-direction: row; justify-content: space-around; align-items: center; }
+
+        .flex-column { flex-direction: column; justify-content: flex-start; align-items: center; }
+
+        body { overflow: auto; background: #fff; }
+
+        .title { width: 920px; padding: 30px; align-items: flex-end; }
+
+        .title h1 { padding-bottom: 20px; font-size: 38px; color: #ffffff; text-shadow: 0 1px 3px #222222; }
+
+        .title p { font-size: 18px; color: #f5f5f5; text-shadow: 0 1px 3px #565656; }
+
+        .wrap { width: 1220px; }
+
+        .wrap .reference { position: relative; padding: 10px; background-color: rgba(255, 255, 255, 0); border-radius: 10px; box-shadow: 0 0 20px #a1a19f; }
+
+        .wrap .reference img.face { display: block; width: 320px; height: auto; border-radius: 10px; }
+
+        .wrap .reference img.toggle { position: absolute; right: 10px; top: 10px; width: 50px; height: 50px; }
+
+        .wrap .scan video { background-color: rgba(0, 0, 0, .8); border-radius: 10px; }
+
+        .wrap .control { justify-content: space-around; height: 456px; padding: 0 20px; }
+
+        .wrap .control p { width: 160px; height: 60px; background-color: #f9f9f9; text-align: center; line-height: 60px; color: #ffffff; font-size: 24px; border-radius: 8px; cursor: pointer; box-shadow: -8px -8px 150px -8px #b2b3b5 inset, 0 0 5px #222222; text-shadow: 0 0 1px #222222; transition: .5s; }
+
+        .wrap .control p:hover { box-shadow: -8px -8px 150px -8px #50c4f1 inset, 0 0 5px #ffffff; }
+
+        .wrap .scan { position: relative; overflow: hidden; }
+
+        .wrap .scan .strainer { position: absolute; top: 10px; width: 320px; z-index: 999; height: 3px; }
+
+        .wrap .scan .capture { width: 320px; height: 456px; }
+
+        .wrap .scan .strainer.on { background: linear-gradient(to left, transparent, #0bffb2, transparent); animation: scan 1s linear infinite; }
+
+        @keyframes scan {
+            0% { top: 10px; }
+            50% { top: 456px; }
+            100% { top: 10px; }
+        }
+
+    </style>
+    <script type="text/javascript" src="vconsole.min.js"></script>
+</head>
+<body>
+<div class="title flex flex-column">
+</div>
+<div class="wrap flex flex-row">
+
+    <!--video用于显示媒体设备的视频流，自动播放-->
+    <video  id="video" autoplay style="width: 480px;height: 320px"></video>
+    <!--拍照按钮-->
+    <div>
+        <button id="capture">拍照</button>
+    </div>
+    <!--描绘video截图-->
+    <canvas id="canvas" width="480" height="320"></canvas>
+
+
+</div>
+
+<script type="text/javascript">
+    var video = document.getElementById('video');
+    var canvas = document.getElementById('canvas');
+    var capture = document.getElementById('capture');
+    var context = canvas.getContext('2d');
+    function getUserMediaToPhoto(constraints,success,error) {
+        if(navigator.mediaDevices.getUserMedia){
+            //最新标准API
+            navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+        }else if (navigator.webkitGetUserMedia) {
+            //webkit核心浏览器
+            navigator.webkitGetUserMedia(constraints,success,error);
+        }else if(navigator.mozGetUserMedia){
+            //firefox浏览器
+            navigator.mozGetUserMedia(constraints,success,error);
+        }else if(navigator.getUserMedia){
+            //旧版API
+            navigator.getUserMedia(constraints,success,error);
+        }
+    }
+    //成功回调函数
+    function success(stream){
+        //兼容webkit核心浏览器
+        var CompatibleURL = window.URL || window.webkitURL;
+        //将视频流转化为video的源
+        video.src = CompatibleURL.createObjectURL(stream);
+        video.play();//播放视频
+    }
+    function error(error) {
+        console.log('访问用户媒体失败：',error.name,error.message);
+    }
+    if(navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.getUserMedia){
+        getUserMediaToPhoto({video:{width:480,height:320}},success,error);
+    }else{
+        alert('你的浏览器不支持访问用户媒体设备');
+    }
+    capture.addEventListener('click',function() {
+        // 将video画面描绘在canvas画布上
+        context.drawImage(video,0,0,480,320);
+    })
+
+</script>
+</body>
+</html>
