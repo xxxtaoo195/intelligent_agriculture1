@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.topwulian.dao.ProducterDao">
+
+	<sql id="where">
+		<where>
+			<if test="params.id != null and params.id != ''">
+				and id = #{params.id} 
+			</if>
+			<if test="params.isactive != null and params.isactive != ''">
+				and isactive = #{params.isactive} 
+			</if>
+			<if test="params.username != null and params.username != ''">
+				and username = #{params.username} 
+			</if>
+			<if test="params.phone != null and params.phone != ''">
+				and phone = #{params.phone} 
+			</if>
+			<if test="params.wechat != null and params.wechat != ''">
+				and wechat = #{params.wechat} 
+			</if>
+			<if test="params.usercard != null and params.usercard != ''">
+				and usercard = #{params.usercard} 
+			</if>
+			<if test="params.createdate != null and params.createdate != ''">
+				and createdate = #{params.createdate} 
+			</if>
+			<if test="params.sys_user_id != null and params.sys_user_id != ''">
+				and sys_user_id = #{params.sysUserId} 
+			</if>
+			<if test="params.producerTypeId != null and params.producerTypeId != ''">
+				and producerTypeId = #{params.producerTypeId} 
+			</if>
+			<if test="params.password != null and params.password != ''">
+				and password = #{params.password} 
+			</if>
+		
+		</where>
+	</sql>
+
+	<select id="count" resultType="int">
+		select count(1) from t_producter t
+		<include refid="where" />
+	</select>
+
+	<select id="list" resultType="Producter">
+		select * from t_producter t
+        <if test="params != null">
+            <include refid="where" />
+            ${params.orderBy}
+        </if>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+	</select>
+
+	<update id="update">
+		update t_producter t
+		<set>
+			<if test="isactive != null">
+				isactive = #{isactive}, 
+			</if>
+			<if test="username != null">
+				username = #{username}, 
+			</if>
+			<if test="phone != null">
+				phone = #{phone}, 
+			</if>
+			<if test="wechat != null">
+				wechat = #{wechat}, 
+			</if>
+			<if test="usercard != null">
+				usercard = #{usercard}, 
+			</if>
+			<if test="createdate != null">
+				createdate = #{createdate}, 
+			</if>
+			<if test="sys_user_id != null">
+				sys_user_id = #{sysUserId}, 
+			</if>
+			<if test="producerTypeId != null">
+				producerTypeId = #{producerTypeId}, 
+			</if>
+			<if test="password != null">
+				password = #{password}, 
+			</if>
+
+		</set>
+
+		where t.id = #{id}
+	</update>
+
+</mapper>

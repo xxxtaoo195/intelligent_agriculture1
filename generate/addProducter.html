@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" media="screen" href="../../css/bootstrap.min.css">
+</head>
+<body>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	<form class="form-horizontal" onsubmit="return false" id="form">
+		<fieldset>
+			<div class='form-group'>
+				<label class='col-md-2 control-label'>isactive</label>
+				<div class='col-md-10'>
+					<input class='form-control' placeholder='isactive' type='text' name='isactive' id='isactive' data-bv-notempty='true' data-bv-notempty-message='isactive 不能为空'>
+				</div>
+			</div>
+			<div class='form-group'>
+				<label class='col-md-2 control-label'>username</label>
+				<div class='col-md-10'>
+					<input class='form-control' placeholder='username' type='text' name='username' id='username' data-bv-notempty='true' data-bv-notempty-message='username 不能为空'>
+				</div>
+			</div>
+			<div class='form-group'>
+				<label class='col-md-2 control-label'>phone</label>
+				<div class='col-md-10'>
+					<input class='form-control' placeholder='phone' type='text' name='phone' id='phone' data-bv-notempty='true' data-bv-notempty-message='phone 不能为空'>
+				</div>
+			</div>
+			<div class='form-group'>
+				<label class='col-md-2 control-label'>wechat</label>
+				<div class='col-md-10'>
+					<input class='form-control' placeholder='wechat' type='text' name='wechat' id='wechat' data-bv-notempty='true' data-bv-notempty-message='wechat 不能为空'>
+				</div>
+			</div>
+			<div class='form-group'>
+				<label class='col-md-2 control-label'>usercard</label>
+				<div class='col-md-10'>
+					<input class='form-control' placeholder='usercard' type='text' name='usercard' id='usercard' data-bv-notempty='true' data-bv-notempty-message='usercard 不能为空'>
+				</div>
+			</div>
+			<div class='form-group'>
+				<label class='col-md-2 control-label'>createdate</label>
+				<div class='col-md-10'>
+					<input class='form-control' placeholder='createdate' type='text' name='createdate' id='createdate' data-bv-notempty='true' data-bv-notempty-message='createdate 不能为空'>
+				</div>
+			</div>
+			<div class='form-group'>
+				<label class='col-md-2 control-label'>sysUserId</label>
+				<div class='col-md-10'>
+					<input class='form-control' placeholder='sysUserId' type='text' name='sysUserId' id='sysUserId' data-bv-notempty='true' data-bv-notempty-message='sysUserId 不能为空'>
+				</div>
+			</div>
+			<div class='form-group'>
+				<label class='col-md-2 control-label'>producerTypeId</label>
+				<div class='col-md-10'>
+					<input class='form-control' placeholder='producerTypeId' type='text' name='producerTypeId' id='producerTypeId' data-bv-notempty='true' data-bv-notempty-message='producerTypeId 不能为空'>
+				</div>
+			</div>
+			<div class='form-group'>
+				<label class='col-md-2 control-label'>password</label>
+				<div class='col-md-10'>
+					<input class='form-control' placeholder='password' type='text' name='password' id='password' data-bv-notempty='true' data-bv-notempty-message='password 不能为空'>
+				</div>
+			</div>
+
+
+			<div class="form-actions">
+				<div class="row" align="center">
+					<div class="col-md-12">
+					    <button class="btn btn-primary" onclick="location.href='producterList.html'">返回</button>
+						<button class="btn btn-primary" type="submit" onclick="add()">
+							<i class="fa fa-save"></i> 保存
+						</button>
+					</div>
+				</div>
+			</div>
+
+		</fieldset>
+	</form>
+</div>
+	<script type="text/javascript" src="../../js/libs/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../../js/jq.js"></script>
+	<script type="text/javascript" src="../../js/plugin/bootstrapvalidator/bootstrapValidator.min.js"></script>
+	<script type="text/javascript" src="../../js/common.js"></script>
+	<script type="text/javascript" src="../../layui/layui.js"></script>
+	<script type="text/javascript">
+		layui.use(['layer','laydate'], function(){
+		    var layer = layui.layer;
+		});
+		
+		function add() {
+			$('#form').bootstrapValidator();
+			var bootstrapValidator = $("#form").data('bootstrapValidator');
+			bootstrapValidator.validate();
+		    if(!bootstrapValidator.isValid()){
+			   return;
+		    }
+		    
+		    var formdata = $("#form").serializeObject();
+
+			$.ajax({
+				type : 'post',
+				url : '/producters',
+				contentType: "application/json; charset=utf-8",  
+				data : JSON.stringify(formdata),
+				success : function(data) {
+					layer.msg("添加成功", {shift: -1, time: 1000}, function(){
+                        location.href = "producterList.html";
+                    });
+				}
+			});
+		}
+		
+	</script>
+</body>
+</html>
