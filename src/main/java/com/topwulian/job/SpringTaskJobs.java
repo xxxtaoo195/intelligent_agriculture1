@@ -193,7 +193,7 @@ public class SpringTaskJobs {
     @Scheduled(cron = "0 0/10 * * * ? ")
     public void getDeviceLogInfo() throws Exception{
         List<SysStTokenInfo> tokenInfos = sysStTokenInfoDao.getByTokenInfo();
-
+        //测试
         if(tokenInfos.size()>0){
             for(SysStTokenInfo info : tokenInfos) {
                 String GET_USER_AREA_URL = "http://light.sciento.top:9810/device/collection/area?areaId=" + info.getAreaid();
